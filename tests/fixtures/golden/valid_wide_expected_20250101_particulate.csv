@@ -1,0 +1,5 @@
+station_id,timestamp,PM2.5,PM10,AQI,date
+alpha,0,,18,48,20250101
+alpha,2,12.5,20,50,20250101
+beta,0,11,19,49,20250101
+beta,2,13,21,51,20250101

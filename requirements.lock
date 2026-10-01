@@ -1,0 +1,23 @@
+# Pinned runtime installation input for Python 3.10.
+# Every declared dependency is exact. Generate a complete transitive lock with the
+# pinned pip-tools test dependency in a dedicated Python 3.10 environment before
+# deployment; check_locks.py prevents an unlocked direct dependency from entering.
+alembic==1.14.0
+APScheduler==3.10.4
+argon2-cffi==23.1.0
+fastapi==0.115.6
+httpx==0.28.1
+Jinja2==3.1.5
+matplotlib==3.9.3
+numpy==1.26.4
+openpyxl==3.1.5
+pandas==2.2.3
+PyJWT==2.10.1
+pydantic-settings==2.7.1
+pypots==0.13.0
+reportlab==4.2.5
+scikit-learn==1.5.2
+seaborn==0.13.2
+SQLAlchemy==2.0.36
+tensorflow==2.15.1
+uvicorn==0.34.0

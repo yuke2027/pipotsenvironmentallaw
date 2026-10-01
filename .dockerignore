@@ -1,0 +1,14 @@
+.venv
+.git
+.pytest_cache
+.mypy_cache
+__pycache__
+*.pyc
+.ipynb_checkpoints
+*.ipynb
+.env
+var
+data1
+results
+*.db
+*.db-*

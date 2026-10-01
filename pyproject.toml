@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools==75.6.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "environmental-supervision-platform"
+version = "0.1.0"
+description = "环境监督平台"
+requires-python = ">=3.10,<3.11"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-config --strict-markers --cov=app --cov=legacy_algorithms --cov-report=term-missing"
+markers = [
+  "unit: isolated unit tests",
+  "property: Hypothesis property-based tests",
+  "integration: integration tests using temporary resources",
+  "smoke: package and configuration smoke tests",
+  "golden: legacy-behavior regression tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["app", "legacy_algorithms"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+
+[tool.mypy]
+python_version = "3.10"
+files = ["app"]
+follow_imports = "silent"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unreachable = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["reportlab", "reportlab.*", "apscheduler", "apscheduler.*", "openpyxl", "openpyxl.*"]
+ignore_missing_imports = true

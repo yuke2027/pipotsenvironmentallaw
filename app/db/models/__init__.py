@@ -1,0 +1,45 @@
+"""Import every mapped class so metadata and string relationships resolve."""
+
+from app.db.base import Base
+from app.db.models.tables import (
+    Alert,
+    AlertChannelConfig,
+    AlertDeliveryAttempt,
+    AuditLog,
+    City,
+    ComplianceResult,
+    ForecastResult,
+    ForecastRun,
+    JobRun,
+    LegalStandard,
+    ModelActivation,
+    ModelRegistry,
+    MonitoringRecord,
+    RevokedToken,
+    RiskAssessment,
+    RiskThreshold,
+    Station,
+    User,
+)
+
+__all__ = [
+    "Alert",
+    "AlertChannelConfig",
+    "AlertDeliveryAttempt",
+    "AuditLog",
+    "Base",
+    "City",
+    "ComplianceResult",
+    "ForecastResult",
+    "ForecastRun",
+    "JobRun",
+    "LegalStandard",
+    "ModelActivation",
+    "ModelRegistry",
+    "MonitoringRecord",
+    "RevokedToken",
+    "RiskAssessment",
+    "RiskThreshold",
+    "Station",
+    "User",
+]

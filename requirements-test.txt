@@ -1,0 +1,8 @@
+# Test and developer-only dependencies. Runtime requirements remain separate.
+-r requirements.txt
+hypothesis==6.122.0
+mypy==1.13.0
+pandas-stubs==2.2.3.241126
+pip-tools==7.4.1
+pytest==8.3.4
+pytest-cov==6.0.0

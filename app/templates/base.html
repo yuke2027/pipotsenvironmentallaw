@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title }} - 环境监督平台</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/htmx.min.js"></script>
+  <script src="/static/chart.js"></script>
+</head>
+<body>
+  <header>
+    <strong>环境监督平台</strong>
+    <nav>
+      <a href="/">总览</a>
+      <a href="/ui/monitoring?role={{ role }}">监测</a>
+      <a href="/ui/compliance?role={{ role }}">合规</a>
+      <a href="/ui/risk?role={{ role }}">风险</a>
+      <a href="/ui/trend?role={{ role }}">趋势</a>
+      {% if role in ["管理员", "监管人员"] %}
+      <a href="/ui/alerts?role={{ role }}">告警</a>
+      <a href="/ui/report?role={{ role }}">报告</a>
+      {% endif %}
+      {% if role != "访客" %}
+      <a href="/ui/export?role={{ role }}">导出</a>
+      <a href="/ui/standards?role={{ role }}">标准</a>
+      {% endif %}
+      {% if role == "管理员" %}
+      <a href="/ui/models?role={{ role }}">模型</a>
+      <a href="/ui/users?role={{ role }}">用户</a>
+      {% endif %}
+      <a href="/ui/status?role={{ role }}">系统状态</a>
+    </nav>
+  </header>
+  <main>
+    {% block body %}{% endblock %}
+  </main>
+</body>
+</html>
