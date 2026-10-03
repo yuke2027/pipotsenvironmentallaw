@@ -54,7 +54,8 @@ def test_expired_and_tampered_tokens_are_rejected() -> None:
         decode_access_token(token, TEST_SECRET, _NOW + timedelta(seconds=60))
     assert expired.value.status_code == 401
 
-    tampered = token[:-1] + ("a" if token[-1] != "a" else "b")
+    header, payload, signature = token.split(".")
+    tampered = f"{header}.{payload}.{'a' if signature[0] != 'a' else 'b'}{signature[1:]}"
     with pytest.raises(AppError) as broken:
         decode_access_token(tampered, TEST_SECRET, _NOW)
     assert broken.value.status_code == 401

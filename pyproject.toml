@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "environmental-supervision-platform"
-version = "0.1.0"
+version = "2.0.0"
 description = "环境监督平台"
-requires-python = ">=3.10,<3.11"
+requires-python = ">=3.12,<3.13"
 
 [tool.pytest.ini_options]
 minversion = "8.0"
@@ -29,8 +29,9 @@ show_missing = true
 skip_empty = true
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.12"
 files = ["app"]
+plugins = ["pydantic.mypy"]
 follow_imports = "silent"
 check_untyped_defs = true
 disallow_any_generics = true

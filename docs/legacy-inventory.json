@@ -1,0 +1,940 @@
+{
+  "baseline_commit": "a044b23",
+  "files": [
+    {
+      "path": "data/air_quality/20250101_gas.csv",
+      "bytes": 22501,
+      "sha256": "01bff5c4e108be0a985cd66817d0a44550626b95df28ee261412679645ee3f22"
+    },
+    {
+      "path": "data/air_quality/20250101_particulate.csv",
+      "bytes": 35100,
+      "sha256": "c839313fc09c428dde921cc7fcc79708c1a87053ea36a415276c71df35659718"
+    },
+    {
+      "path": "data/air_quality/20250102_gas.csv",
+      "bytes": 22501,
+      "sha256": "313968a1ef91f7595352a142e08fe0d373ffdf9ddbba1074deef03ccf48c9360"
+    },
+    {
+      "path": "data/air_quality/20250102_particulate.csv",
+      "bytes": 34381,
+      "sha256": "1a9f5cb44b8908e319323f86d0e26042026fd6a1372fc14e3062d7f981cc26a8"
+    },
+    {
+      "path": "data/air_quality/20250103_gas.csv",
+      "bytes": 22501,
+      "sha256": "8f8ca23567ad0735f830333698ed4024d35944e34732d7da394872af8cad9e13"
+    },
+    {
+      "path": "data/air_quality/20250103_particulate.csv",
+      "bytes": 34528,
+      "sha256": "408909af3136b2c3c61932f725c058ed0f3bf1ab7f9b45d257db464071f32a0a"
+    },
+    {
+      "path": "data/air_quality/20250104_gas.csv",
+      "bytes": 19753,
+      "sha256": "b69741ec103aecd73786eb742bff9c9f03d8094d08189289bb13ed6f513f2fe4"
+    },
+    {
+      "path": "data/air_quality/20250104_particulate.csv",
+      "bytes": 30437,
+      "sha256": "caa1475e8de7c76d4b8072ac450650cbcacbb9b6cb0028811a00046f3b1fdb66"
+    },
+    {
+      "path": "data/air_quality/20250105_gas.csv",
+      "bytes": 22501,
+      "sha256": "0753c5c79313789a61bb3f263af9b7a53aadb726d9e5d67227e20bcab02b68de"
+    },
+    {
+      "path": "data/air_quality/20250105_particulate.csv",
+      "bytes": 34595,
+      "sha256": "3482ecd09e3ffd728dd70536006edb00d9cbdd1c9c12ea0601006cd39db012f8"
+    },
+    {
+      "path": "data/air_quality/20250106_gas.csv",
+      "bytes": 22501,
+      "sha256": "8155e6828ca73658f5775f02fa76a1eaf96c748b4b6822047f945997941cc8e1"
+    },
+    {
+      "path": "data/air_quality/20250106_particulate.csv",
+      "bytes": 34088,
+      "sha256": "4df8a58eca98bdd9fd15398147a8e1578dfd58b045e7e2b04190969d51bb287c"
+    },
+    {
+      "path": "data/air_quality/20250107_gas.csv",
+      "bytes": 22501,
+      "sha256": "dea71fc9bcefd1844691222103ee191f7529847cb28bb83e4300003b84c9eeff"
+    },
+    {
+      "path": "data/air_quality/20250107_particulate.csv",
+      "bytes": 33882,
+      "sha256": "8bed3c68f638e6e2942a547d75fc142e8290dcda475698520c1fe45cd46982dc"
+    },
+    {
+      "path": "data/air_quality/20250108_gas.csv",
+      "bytes": 21585,
+      "sha256": "d120b8b2ed2ccd5d804e85bf4d6ce48977f937cbd806d7e3999ade7ee32f3880"
+    },
+    {
+      "path": "data/air_quality/20250108_particulate.csv",
+      "bytes": 32470,
+      "sha256": "e8fe80f7cdd84f6ec68e6846e8353e09bc69cae698d994138ec26072d176d088"
+    },
+    {
+      "path": "data/air_quality/20250109_gas.csv",
+      "bytes": 22501,
+      "sha256": "036cdb36422dfd8755d74cdb6968640d926f91c78f77390932a9185ab19a24b0"
+    },
+    {
+      "path": "data/air_quality/20250109_particulate.csv",
+      "bytes": 34165,
+      "sha256": "35487965ac2a5db194f3e44e4390d0eac681848b6de136026203c0d3ab3309e3"
+    },
+    {
+      "path": "data/air_quality/20250110_gas.csv",
+      "bytes": 22501,
+      "sha256": "e42966da86df582f915746d58c89a9fd0f6d9a51c6377d68275d3a7a7e50ac3c"
+    },
+    {
+      "path": "data/air_quality/20250110_particulate.csv",
+      "bytes": 34538,
+      "sha256": "56c18387bc31f426cc97f5610b432b1906c7c557a8077f095ca16d7ff84354ec"
+    },
+    {
+      "path": "data/air_quality/20250111_gas.csv",
+      "bytes": 22501,
+      "sha256": "d41e9ef8d0aedb6213dcfdc1e8936256bbd8e96a9347a20d6403148d961b1f3a"
+    },
+    {
+      "path": "data/air_quality/20250111_particulate.csv",
+      "bytes": 34584,
+      "sha256": "a1fa52194c530dd22ca96f43ee4b45654182f667da9adcf6957649fd536b217c"
+    },
+    {
+      "path": "data/air_quality/20250112_gas.csv",
+      "bytes": 21585,
+      "sha256": "a1f2974b2a95ce81e9cbda79e04f35eae692baaff5f4b12f596fc1e03b1e8586"
+    },
+    {
+      "path": "data/air_quality/20250112_particulate.csv",
+      "bytes": 33373,
+      "sha256": "dee47325b6309d0e725bfd8215d518ae8dce71007b5b3c7f8dd0f80c1610da97"
+    },
+    {
+      "path": "data/air_quality/20250113_gas.csv",
+      "bytes": 22501,
+      "sha256": "73522119bd6b25a6f773ddcd61b8a5fe61f90506a01867ab51e521a4deab2c9c"
+    },
+    {
+      "path": "data/air_quality/20250113_particulate.csv",
+      "bytes": 34907,
+      "sha256": "d51e657d590e597c2d98c07985f32be8d2d293b0367008957a14c5966bd47883"
+    },
+    {
+      "path": "data/air_quality/20250114_gas.csv",
+      "bytes": 21585,
+      "sha256": "2e59473bf9fc683cafc9dc70d98e0206eb6b2f2801e23776f45dc100c0d07343"
+    },
+    {
+      "path": "data/air_quality/20250114_particulate.csv",
+      "bytes": 32891,
+      "sha256": "44a2884b0722c9910fa52707c11fd45a5a0014831ef1f7fb720ec6f0c9d72121"
+    },
+    {
+      "path": "data/air_quality/20250115_gas.csv",
+      "bytes": 22501,
+      "sha256": "ab1e21593bc07a6ea79bcbfe8706e2cdc8fed0857c703435e98c0887e4305405"
+    },
+    {
+      "path": "data/air_quality/20250115_particulate.csv",
+      "bytes": 34532,
+      "sha256": "ee8543ba4b27ffc2ead6a710a7c84c63702a062256f4617f6f8e018870260fce"
+    },
+    {
+      "path": "data/air_quality/20250116_gas.csv",
+      "bytes": 22501,
+      "sha256": "ab84bd5a75275b84e4e1e1c2875c70c3cae954be8a726574556a307364f8dc50"
+    },
+    {
+      "path": "data/air_quality/20250116_particulate.csv",
+      "bytes": 35016,
+      "sha256": "f05e4f72818d58f73035f2a5e7e52d87bbea6d76311836c3579cf74f4919c87f"
+    },
+    {
+      "path": "data/air_quality/20250117_gas.csv",
+      "bytes": 22501,
+      "sha256": "17eaed084521e3be3b96908b8ad409717aec12c13f5e1b6f6973214b9ce39fea"
+    },
+    {
+      "path": "data/air_quality/20250117_particulate.csv",
+      "bytes": 35258,
+      "sha256": "96ac6bc156c19bf5bad242805438b4f3c70ddb7e5d19acd40b89bc645a95e278"
+    },
+    {
+      "path": "data/air_quality/20250118_gas.csv",
+      "bytes": 22501,
+      "sha256": "186b79b745426ab34ba8c5af0081b186097ce0d18cda830d79fc24126dccee37"
+    },
+    {
+      "path": "data/air_quality/20250118_particulate.csv",
+      "bytes": 35542,
+      "sha256": "a82345f86bc737eab297b56b73f28777d2df5145b374be9d73d929efa421b68b"
+    },
+    {
+      "path": "data/air_quality/20250119_gas.csv",
+      "bytes": 22501,
+      "sha256": "5412c2bb5c6d88ba692cf78081b1834b9bdcf23c0d4c83e57a241b1064070a57"
+    },
+    {
+      "path": "data/air_quality/20250119_particulate.csv",
+      "bytes": 34867,
+      "sha256": "6a5fa565daec8c496bcda1f47f4d955ab1f99774880eed8cda4f74d10e84e24c"
+    },
+    {
+      "path": "data/air_quality/20250120_gas.csv",
+      "bytes": 22501,
+      "sha256": "64671e8e6b3fc09fdc2a8ecf8b28a634b3441aab03db0371ab211e405efef5ce"
+    },
+    {
+      "path": "data/air_quality/20250120_particulate.csv",
+      "bytes": 35107,
+      "sha256": "cadfab90b980649a95d033b1c1000b11e8bf7090dde5dfe81bccfd6635bea0db"
+    },
+    {
+      "path": "data/air_quality/20250121_gas.csv",
+      "bytes": 22501,
+      "sha256": "c0106f8aaa5c675425a9266ba6545c7d71cf4e61e1eccf932a11a765e6874c40"
+    },
+    {
+      "path": "data/air_quality/20250121_particulate.csv",
+      "bytes": 34875,
+      "sha256": "1e6bad0b05420cd47e6dd3413a03c464ed828b1eda0b8c32cbb5f7c58661c96c"
+    },
+    {
+      "path": "data/air_quality/20250122_gas.csv",
+      "bytes": 22501,
+      "sha256": "c0f59ecbf13d7609de30cb01bc6bc6fd954e1cb10de3e6c763780de556ae31b9"
+    },
+    {
+      "path": "data/air_quality/20250122_particulate.csv",
+      "bytes": 35053,
+      "sha256": "0fdd181437f7db187dc785d7100fbda3704d6e3fc493e4da13164886bdd737b9"
+    },
+    {
+      "path": "data/air_quality/20250123_gas.csv",
+      "bytes": 22501,
+      "sha256": "e9827e9778b30d5e0f4168acb2b95413996ab51c89bad2e639149e395f29cb34"
+    },
+    {
+      "path": "data/air_quality/20250123_particulate.csv",
+      "bytes": 35269,
+      "sha256": "c662abfeaea08ab0df2f4f67711dfaa768d5d511ccf30eb1aaae9b8607851322"
+    },
+    {
+      "path": "data/air_quality/20250124_gas.csv",
+      "bytes": 22501,
+      "sha256": "5d9f8425d11ea589fda7ce2874c61ad9471a9240a068c00325ebb39b7b5ba1b2"
+    },
+    {
+      "path": "data/air_quality/20250124_particulate.csv",
+      "bytes": 36212,
+      "sha256": "2d7aa47f3da7b688984b48ffba9a4625bad7aebaa764377ec51cffdee5ac83a7"
+    },
+    {
+      "path": "data/air_quality/20250125_gas.csv",
+      "bytes": 22501,
+      "sha256": "fd25e5cdb42005c4e8185550265abe8de13b7bb959e4518e9b92ab8f85dcd29f"
+    },
+    {
+      "path": "data/air_quality/20250125_particulate.csv",
+      "bytes": 37135,
+      "sha256": "7a43c047502319ddad22b5ce99afaeedeb5aa5ac6bf23a1d53c6de9e8f8c292e"
+    },
+    {
+      "path": "data/air_quality/20250126_gas.csv",
+      "bytes": 22501,
+      "sha256": "3768947eb46d8bbd6b315fd0e4531b262fac8c0a7e388828a4c16a9728b095a6"
+    },
+    {
+      "path": "data/air_quality/20250126_particulate.csv",
+      "bytes": 35763,
+      "sha256": "1ad37547498a1bc19af094c9d07d01622e078628c4b7d2a800f5821d30a81fc0"
+    },
+    {
+      "path": "data/air_quality/20250127_gas.csv",
+      "bytes": 22501,
+      "sha256": "a21360038d63f6543ce55177dc5bfd44e95bc89f70fdab92904fe1cea287c08c"
+    },
+    {
+      "path": "data/air_quality/20250127_particulate.csv",
+      "bytes": 33850,
+      "sha256": "11d62120ae278e7f63ee92d5e2d41b5407099e5536d11750e1bf5be8a990314e"
+    },
+    {
+      "path": "data/air_quality/20250128_gas.csv",
+      "bytes": 22501,
+      "sha256": "7a9a6354f88929e8f5d4d5870768192f0fc46273e66827942d86f8b8b66217f1"
+    },
+    {
+      "path": "data/air_quality/20250128_particulate.csv",
+      "bytes": 34172,
+      "sha256": "7e714b9e8c3087aa6e04920c144998bc56a41fc21f3f23dde02832b99abab8cb"
+    },
+    {
+      "path": "data/air_quality/20250129_gas.csv",
+      "bytes": 22501,
+      "sha256": "0c9e1c4963592c94e40ca3c71a974646900cbe7584e4243ca2b4968f937ba755"
+    },
+    {
+      "path": "data/air_quality/20250129_particulate.csv",
+      "bytes": 35433,
+      "sha256": "05c9125810c17959582a48f275d1069765fe872b28eed5b57ceff4e4464b2999"
+    },
+    {
+      "path": "data/air_quality/20250130_gas.csv",
+      "bytes": 22501,
+      "sha256": "bd2fec1bdfaf4f90751b35000ce4accf02bc27eaf3cd112d835eb59e4f5237cc"
+    },
+    {
+      "path": "data/air_quality/20250130_particulate.csv",
+      "bytes": 34865,
+      "sha256": "5612df04c2095d32fc75667df24ce5565a034ea2a7d3c22e73c8bced3f306cca"
+    },
+    {
+      "path": "data/air_quality/20250131_gas.csv",
+      "bytes": 22501,
+      "sha256": "f476248a78631ddd91fa24d61826a84dce8786ef15052b620af50ae3d41fac76"
+    },
+    {
+      "path": "data/air_quality/20250131_particulate.csv",
+      "bytes": 34936,
+      "sha256": "57741f7783cbc9882dba20b76af509a0a191e542f9901a452dd4780d70c7e160"
+    },
+    {
+      "path": "data1/beijing_all_20250101.csv",
+      "bytes": 12074,
+      "sha256": "74f0d91977fa861ec8b26d67b7d5e6d3353bb2a2085ad6528baeb77e19437129"
+    },
+    {
+      "path": "data1/beijing_all_20250102.csv",
+      "bytes": 11407,
+      "sha256": "6a2718ed11977587ced1f24b9bd8b1914d445f6c783c5588b52613a221bcbb67"
+    },
+    {
+      "path": "data1/beijing_all_20250103.csv",
+      "bytes": 11602,
+      "sha256": "d63aa9fa992427124cf79ac2869ba7c9fe9e217124b1c8d6737d70ecce655dbb"
+    },
+    {
+      "path": "data1/beijing_all_20250104.csv",
+      "bytes": 10491,
+      "sha256": "5745145935009546f775cd03c062e305e080cca8629c17119ade9128b3078e38"
+    },
+    {
+      "path": "data1/beijing_all_20250105.csv",
+      "bytes": 11741,
+      "sha256": "01d29ab6755c4641f29c69cf8b2004ca9ddd5e0402cee003177204e7a966fb92"
+    },
+    {
+      "path": "data1/beijing_all_20250106.csv",
+      "bytes": 11112,
+      "sha256": "58c65aad49130c7f2f0aa10bfac0fdd9f3bf89335ee004ad6b153b89893fb466"
+    },
+    {
+      "path": "data1/beijing_all_20250107.csv",
+      "bytes": 10912,
+      "sha256": "51950e5394c81da266dbbbff75e40a8751f5cd03184d2f5ddac66140f8d26987"
+    },
+    {
+      "path": "data1/beijing_all_20250108.csv",
+      "bytes": 10484,
+      "sha256": "4bc5bd84d08d004677cf3725a333ba3c4205ebd4abe92b9f99e9be3cedd4036c"
+    },
+    {
+      "path": "data1/beijing_all_20250109.csv",
+      "bytes": 11157,
+      "sha256": "568f436d0414e7af0f0b7d0512f32d889931fd91d446652bc0b4cb7e15f45ecf"
+    },
+    {
+      "path": "data1/beijing_all_20250110.csv",
+      "bytes": 11514,
+      "sha256": "2290b42603a8a72c3abbdfc49d124e05642d101499faeb55ae2eda07aac3371b"
+    },
+    {
+      "path": "data1/beijing_all_20250111.csv",
+      "bytes": 11710,
+      "sha256": "e8e988ef6b46a143b8acec7885429932e05391b1b2f9547c1edd438e1a14e99f"
+    },
+    {
+      "path": "data1/beijing_all_20250112.csv",
+      "bytes": 11307,
+      "sha256": "b44c49f441606526d731ac55e8bc905afc03d4fa3a91ee7ae2d58212259be22d"
+    },
+    {
+      "path": "data1/beijing_all_20250113.csv",
+      "bytes": 11945,
+      "sha256": "bf700f5be3f1353413a1b336c27b13bc510fc4fe9689808912a3100f0eb88cae"
+    },
+    {
+      "path": "data1/beijing_all_20250114.csv",
+      "bytes": 10873,
+      "sha256": "92932145aa3318439be53db81ae0edfbd1011fad0e9f533196603f89d0216793"
+    },
+    {
+      "path": "data1/beijing_all_20250115.csv",
+      "bytes": 11550,
+      "sha256": "0fc6ff0332185dd8b57ce9b9928170f4eb5b4c24fc3b3d416d12c74f6ccb9cfd"
+    },
+    {
+      "path": "data1/beijing_all_20250116.csv",
+      "bytes": 12010,
+      "sha256": "61ea08bb281bb145e7d4531dd31748454ecc4165b975fd9cbee79dbbd26ec4b8"
+    },
+    {
+      "path": "data1/beijing_all_20250117.csv",
+      "bytes": 12256,
+      "sha256": "f4c56f280cae2ea2616afa28ce1676b9f4fa4ffbff9b715b89cbb566eac7fa94"
+    },
+    {
+      "path": "data1/beijing_all_20250118.csv",
+      "bytes": 12504,
+      "sha256": "42b92a3ac5c4386fc60c4194c627893a1ff8b987c050686e2421a49c44a59d06"
+    },
+    {
+      "path": "data1/beijing_all_20250119.csv",
+      "bytes": 11849,
+      "sha256": "68465a7a18028d9b3ef9d11c638dcbbe6df8feb006724998f7c4dfa3b72ad5ee"
+    },
+    {
+      "path": "data1/beijing_all_20250120.csv",
+      "bytes": 12179,
+      "sha256": "07ec773ca853efbe94d532ffd5bbcbe7dd529963a66bf809b5f0c757ab25038d"
+    },
+    {
+      "path": "data1/beijing_all_20250121.csv",
+      "bytes": 11915,
+      "sha256": "969be47c5bc329cb01843078f8e412f9a9335f6d35f47a7baf4debc467df4bbd"
+    },
+    {
+      "path": "data1/beijing_all_20250122.csv",
+      "bytes": 12045,
+      "sha256": "53ceae5a60ccc19bbe75deea83a0d7f6cf521c9362e7e92b6015441373bf647b"
+    },
+    {
+      "path": "data1/beijing_all_20250123.csv",
+      "bytes": 12273,
+      "sha256": "13215da13c0b8ec87ee2c96d43f25a6bdaf8f8e7311ad3dd1601cf5c2adefa78"
+    },
+    {
+      "path": "data1/beijing_all_20250124.csv",
+      "bytes": 13260,
+      "sha256": "50a698a501232972a7a7ec43937cf696e09b79571b91a9299db95c87dc252183"
+    },
+    {
+      "path": "data1/beijing_all_20250125.csv",
+      "bytes": 14177,
+      "sha256": "15efd1ce8807a4195949571a2e3245cc1defd67fb2fa0f9d4de9dd4566a31f18"
+    },
+    {
+      "path": "data1/beijing_all_20250126.csv",
+      "bytes": 12843,
+      "sha256": "f3a97cd582e08e6d739cc110a453b5d515e4b5ac8f528b78c0a6c8d7495d7a94"
+    },
+    {
+      "path": "data1/beijing_all_20250127.csv",
+      "bytes": 11034,
+      "sha256": "6894ea822c8e043940dbf6ae509664a2797505770ac63e7436dc0b52680927eb"
+    },
+    {
+      "path": "data1/beijing_all_20250128.csv",
+      "bytes": 11254,
+      "sha256": "fab4bad45c28a4fe20268975985d8a170018d6eaa5356344970056589ca6dbfb"
+    },
+    {
+      "path": "data1/beijing_all_20250129.csv",
+      "bytes": 12585,
+      "sha256": "cfd86e724366d912181e87fe8f3a29c91795aada8dd2b0214198a5a8cb1a3940"
+    },
+    {
+      "path": "data1/beijing_all_20250130.csv",
+      "bytes": 12005,
+      "sha256": "dc270b464e3dadc712189e11f5a57b655d16c9a8ba7edfc113199bead1ab5348"
+    },
+    {
+      "path": "data1/beijing_all_20250131.csv",
+      "bytes": 12026,
+      "sha256": "08ab74ed917db7d163335b94c9f27b5fab43b2d641622a63e022a799d065bd6f"
+    },
+    {
+      "path": "data1/beijing_extra_20250101.csv",
+      "bytes": 16985,
+      "sha256": "d5a640ca08af47192bc81959f9aba17a982ee45925e4b2fbe422d3c3891c7115"
+    },
+    {
+      "path": "data1/beijing_extra_20250102.csv",
+      "bytes": 16928,
+      "sha256": "8cc3866803ab7c8f38c54bae3aa418886f04579e55c9696567169e91e9ba676a"
+    },
+    {
+      "path": "data1/beijing_extra_20250103.csv",
+      "bytes": 17028,
+      "sha256": "1dde29a6fb3505607b72cb6ec197193a7fb680688d8dee4a40e9d408a7191779"
+    },
+    {
+      "path": "data1/beijing_extra_20250104.csv",
+      "bytes": 14642,
+      "sha256": "8a1b27be9bcb011a68bccd83f02d06397581158a1cd2c1703945dd4564f20741"
+    },
+    {
+      "path": "data1/beijing_extra_20250105.csv",
+      "bytes": 16640,
+      "sha256": "d23e1b3079d867c416375716b8d22a3a94ab78788a9d3ef3a427662cece86d51"
+    },
+    {
+      "path": "data1/beijing_extra_20250106.csv",
+      "bytes": 16789,
+      "sha256": "c1f986ef0c134d46ac6ba78a66e4b9af392efeb44af63daaa6f98d31c2c16e9d"
+    },
+    {
+      "path": "data1/beijing_extra_20250107.csv",
+      "bytes": 16646,
+      "sha256": "621e23c991f3cb1b7c8f19e78b4d347899f03ba9c2713fd1d451f88b04e998dc"
+    },
+    {
+      "path": "data1/beijing_extra_20250108.csv",
+      "bytes": 15868,
+      "sha256": "c72e316cfe02b4bd83c50287c63d397e74d77f5c7df525616a358a357d25e6e5"
+    },
+    {
+      "path": "data1/beijing_extra_20250109.csv",
+      "bytes": 16880,
+      "sha256": "8477278c2fbd1e9a8b76b01bdcd44f8746c2f9093a4266ea19aee9aa5a1c6e1f"
+    },
+    {
+      "path": "data1/beijing_extra_20250110.csv",
+      "bytes": 17119,
+      "sha256": "88b6cd75eab8b7f5a85ab3b3ab82afc880ab792c7cfeef203a295c927d14a5fb"
+    },
+    {
+      "path": "data1/beijing_extra_20250111.csv",
+      "bytes": 16958,
+      "sha256": "e2fb21840ec04849b7c1faec84c872c85d5ebc66ce38bedd3b20eec2b1af5343"
+    },
+    {
+      "path": "data1/beijing_extra_20250112.csv",
+      "bytes": 16371,
+      "sha256": "d34cb8e12ddead62c47bc27f54a4df4673071dfe0458484959ac2d8f4a8e47a2"
+    },
+    {
+      "path": "data1/beijing_extra_20250113.csv",
+      "bytes": 16906,
+      "sha256": "8a0be55327a977898eb299aa7bcc43a07b924574535fcaba4e1128f05ed00391"
+    },
+    {
+      "path": "data1/beijing_extra_20250114.csv",
+      "bytes": 15941,
+      "sha256": "c40e8ff2f889dc4a4da29b63403f29689ba69898eb55c4725ef482c1e03d8d29"
+    },
+    {
+      "path": "data1/beijing_extra_20250115.csv",
+      "bytes": 16978,
+      "sha256": "da441727ea5271766d81c3cf843ffe4bf5cb844a92ac2c9962c3f814b4214faa"
+    },
+    {
+      "path": "data1/beijing_extra_20250116.csv",
+      "bytes": 17034,
+      "sha256": "009a53cfbe489e9f67109bd4cc8519f374ca12b0cc41721e4b0c06b242820645"
+    },
+    {
+      "path": "data1/beijing_extra_20250117.csv",
+      "bytes": 16878,
+      "sha256": "f5347efdd2bdd8d1dc6ec784b96cce166b8f5fe0cdedd1c7bbd629d2f38fb879"
+    },
+    {
+      "path": "data1/beijing_extra_20250118.csv",
+      "bytes": 16882,
+      "sha256": "a666e26a4eda47e55931cc601ca1a2b3c2fb32c5917210e6572b34113e628558"
+    },
+    {
+      "path": "data1/beijing_extra_20250119.csv",
+      "bytes": 17077,
+      "sha256": "0ae263ed0efb7ad9bc68b347f1454e09f318c2fbf82102329cf184e4b0a041ff"
+    },
+    {
+      "path": "data1/beijing_extra_20250120.csv",
+      "bytes": 16881,
+      "sha256": "dd6009062fd6c79c37923b46a73a3881d4eadaad9b2e25a64e6759102ddb9576"
+    },
+    {
+      "path": "data1/beijing_extra_20250121.csv",
+      "bytes": 16881,
+      "sha256": "4f64169d3c0e5e5276009290e48b3e4dfef680658cd63b0496feb22cdc3ca8fc"
+    },
+    {
+      "path": "data1/beijing_extra_20250122.csv",
+      "bytes": 17063,
+      "sha256": "39fc80876c9ddb67381fb75f0fd85dea1445d21ddd9d8c31d87f0e4c27c937df"
+    },
+    {
+      "path": "data1/beijing_extra_20250123.csv",
+      "bytes": 16914,
+      "sha256": "cbf4c5b27665d764afd99037eada405de56a8c715ec535e26dfdc1b05b073121"
+    },
+    {
+      "path": "data1/beijing_extra_20250124.csv",
+      "bytes": 16914,
+      "sha256": "00eec2fd96ecb60036cdd07f1f40805f9ac95144e9220a3eeca96ef5108e8c11"
+    },
+    {
+      "path": "data1/beijing_extra_20250125.csv",
+      "bytes": 17051,
+      "sha256": "c68a02019b6a363a1b92167160645b1ecb36adebe02137b2ae56c1ce62b1bc76"
+    },
+    {
+      "path": "data1/beijing_extra_20250126.csv",
+      "bytes": 16591,
+      "sha256": "38354078e5a4274b696ae557f34c4fdb964142956238fef2db9fd983415a2d9d"
+    },
+    {
+      "path": "data1/beijing_extra_20250127.csv",
+      "bytes": 16290,
+      "sha256": "6488830107add040e0fa71fab0d13cde5e7517cceb502011964fe93ddc2e37e7"
+    },
+    {
+      "path": "data1/beijing_extra_20250128.csv",
+      "bytes": 16636,
+      "sha256": "0e751c0e4a7dd3dd8c7bbcae9cadb3d3c7f73aab7a8957887f7bda75d54361b0"
+    },
+    {
+      "path": "data1/beijing_extra_20250129.csv",
+      "bytes": 17034,
+      "sha256": "6781f0dc21490eaf009eb2918fe3abd70151e16b18b6c76d659b18477a0d0b09"
+    },
+    {
+      "path": "data1/beijing_extra_20250130.csv",
+      "bytes": 16762,
+      "sha256": "1b77fec46aff0310d5894576ee4db62a8c774de9192f444d32548ba32cd0002d"
+    },
+    {
+      "path": "data1/beijing_extra_20250131.csv",
+      "bytes": 16982,
+      "sha256": "e841ba0b31cc625c7962c01b9e9f96e426155c8ffe5ff630b12f0d07747af295"
+    },
+    {
+      "path": "results/imputed/lstm_test_imputed.csv",
+      "bytes": 88563,
+      "sha256": "9b8016e883878762b95b5950cb23e570b3bebe574efea764524d1d1857c344b8"
+    },
+    {
+      "path": "results/imputed/lstm_train_imputed.csv",
+      "bytes": 391420,
+      "sha256": "2d5107000f56784e89f65f9d475589921079e09be9e11f8ec4e204f0fb90b964"
+    },
+    {
+      "path": "results/imputed/lstm_train_imputed_metrics.csv",
+      "bytes": 61,
+      "sha256": "ad65ac84f8fb7bcfe3b7e7fc613467c786fb667255ed2299a29734510f3ac68a"
+    },
+    {
+      "path": "results/imputed/lstm_val_imputed.csv",
+      "bytes": 73899,
+      "sha256": "52e13164313fcd3e20c20880b317080bb4d15d0fb3bf07e29a7f6fc37d68abb4"
+    },
+    {
+      "path": "results/imputed/lstm_val_imputed_metrics.csv",
+      "bytes": 57,
+      "sha256": "6f59df2c7aba907af49ea9c91541c272c857a5afde2ba78a01bbe6d4395e0623"
+    },
+    {
+      "path": "results/imputed/pypots_test_imputed.csv",
+      "bytes": 88595,
+      "sha256": "596c189863844402023673a0042f35db10236bdb1a8376c5aa949e5db3b8f10c"
+    },
+    {
+      "path": "results/imputed/pypots_train_imputed.csv",
+      "bytes": 391504,
+      "sha256": "08f3345299b193a7f9e25045f1968eba3243516f024e73a3fa52d97bbd328168"
+    },
+    {
+      "path": "results/imputed/pypots_train_imputed_metrics.csv",
+      "bytes": 61,
+      "sha256": "62539cd52b3b3f040bb0685b7c4ddf7c5710ae2a0b22473438d01c89f3682671"
+    },
+    {
+      "path": "results/imputed/pypots_val_imputed.csv",
+      "bytes": 73947,
+      "sha256": "d04e5ae6ea7b76d6f2aa3407cf09c3839b593edae2eb005d96b65cbee6474fd9"
+    },
+    {
+      "path": "results/imputed/pypots_val_imputed_metrics.csv",
+      "bytes": 57,
+      "sha256": "6f59df2c7aba907af49ea9c91541c272c857a5afde2ba78a01bbe6d4395e0623"
+    },
+    {
+      "path": "results/imputed/test_imputed.csv",
+      "bytes": 3354,
+      "sha256": "251d3b079c173e488b7c77870ea177dfc1f441fb57fe73ad96c52ec9621fd827"
+    },
+    {
+      "path": "results/imputed/train_imputed.csv",
+      "bytes": 13126,
+      "sha256": "0ca1a088cd6160375f5243d2f5104a7eb09766b084b15cbe0c541072a6afbf24"
+    },
+    {
+      "path": "results/imputed/train_imputed_metrics.csv",
+      "bytes": 33,
+      "sha256": "f7897db28be9bddf6aa03663d68b3f7e0c6169ad08056f2edfa7c2d84dd7b5b7"
+    },
+    {
+      "path": "results/imputed/val_imputed.csv",
+      "bytes": 2897,
+      "sha256": "8657f89da036bfd291b7f3598f2f638914c43babe99a1e02b23015ce682b3885"
+    },
+    {
+      "path": "results/imputed/val_imputed_metrics.csv",
+      "bytes": 33,
+      "sha256": "f7897db28be9bddf6aa03663d68b3f7e0c6169ad08056f2edfa7c2d84dd7b5b7"
+    },
+    {
+      "path": "results/legal_supervision/compliance_results.csv",
+      "bytes": 293447,
+      "sha256": "cd794548e3e59185aadc3b3e8d2e355985dc4b2f21ea849cbd508b1dc11aa89e"
+    },
+    {
+      "path": "results/legal_supervision/risk_assessments.csv",
+      "bytes": 298777,
+      "sha256": "92d4135db5594aec79e54f8ee83e1c140f286c6068828b0b72795d6eacc3d624"
+    },
+    {
+      "path": "results/models/lstm_imputer.h5",
+      "bytes": 1446232,
+      "sha256": "cea44f612f037cc2d37f5b6e1d62e5fcf3bd896fb55c0b72b666d92d8792a81f"
+    },
+    {
+      "path": "results/plots/imputation_metrics_comparison.png",
+      "bytes": 15018,
+      "sha256": "df79ca25399fb9028f814743151ec0180bb9f43bf440e31828eca683bf5b24a2"
+    },
+    {
+      "path": "results/plots/lstm_imputation_metrics_comparison.png",
+      "bytes": 15947,
+      "sha256": "da5f183b8261523149b125b816bb5b964d747d98faddf75ee1322ccdb68723cb"
+    },
+    {
+      "path": "results/plots/lstm_test_imputed_after_imputation_distribution.png",
+      "bytes": 46779,
+      "sha256": "178d29baa708f648bc4de2c216c6060ecb4c74c3d63a58b256def4b756027b90"
+    },
+    {
+      "path": "results/plots/lstm_test_imputed_boxplot.png",
+      "bytes": 30361,
+      "sha256": "a73f83b99468f7046a9d8262d80d7cf733b5a2c430af738b4c02109b9537d41d"
+    },
+    {
+      "path": "results/plots/lstm_test_imputed_correlation.png",
+      "bytes": 22963,
+      "sha256": "b16a0e18e3f9b9d8a29f17878e96f206de3981a5c14d887e6c2888e98d5e6dcf"
+    },
+    {
+      "path": "results/plots/lstm_train_imputed_after_imputation_distribution.png",
+      "bytes": 46076,
+      "sha256": "90f718bddfd2f7fa3ebe530d64047bbb93093860a40b4fd1c78584bb5cd9b22b"
+    },
+    {
+      "path": "results/plots/lstm_train_imputed_boxplot.png",
+      "bytes": 29125,
+      "sha256": "cdd08b4ad0c8d5af19d4f10903db297f2535be74c4ae4f887ac2e4737e5d2e48"
+    },
+    {
+      "path": "results/plots/lstm_train_imputed_correlation.png",
+      "bytes": 22778,
+      "sha256": "a4fd810039b1105fcd798fca24b247604e90e5d7d830030dbcb8dff98b33ea7f"
+    },
+    {
+      "path": "results/plots/lstm_val_imputed_after_imputation_distribution.png",
+      "bytes": 47039,
+      "sha256": "a9fdc9c72c048f010a9a2594877a67746bd971886aad40c214f0409f4cc742fd"
+    },
+    {
+      "path": "results/plots/lstm_val_imputed_boxplot.png",
+      "bytes": 29858,
+      "sha256": "886b51ff758f90808ac662926daafb84a849a8c187627dbd58d711abb8b27fd6"
+    },
+    {
+      "path": "results/plots/lstm_val_imputed_correlation.png",
+      "bytes": 19791,
+      "sha256": "9f2256b8fe76498e4ce9e417b014e7b5dc901ed4dacbdcf8aa2b86aa24351d7c"
+    },
+    {
+      "path": "results/plots/pypots_imputation_metrics_comparison.png",
+      "bytes": 17718,
+      "sha256": "8fd8b3f268ba90491e01f744cac33381ae4a491c93518ad33d35d1dfab1a5c84"
+    },
+    {
+      "path": "results/plots/pypots_test_imputed_after_imputation_distribution.png",
+      "bytes": 44423,
+      "sha256": "bf27e4d21211f8bd58862f9f272695fbda117d2859fb7a495d1e4ef4e0a7faaf"
+    },
+    {
+      "path": "results/plots/pypots_test_imputed_boxplot.png",
+      "bytes": 30954,
+      "sha256": "5cbc7a3e307437642d197494bd39a375db3a917d4e049ca304b857e037e14170"
+    },
+    {
+      "path": "results/plots/pypots_test_imputed_correlation.png",
+      "bytes": 24171,
+      "sha256": "83077eb1ce1f56736b3224ebc61fe8e6ce2cf6bd3a91a89fd5d64c31ce479928"
+    },
+    {
+      "path": "results/plots/pypots_train_imputed_after_imputation_distribution.png",
+      "bytes": 46032,
+      "sha256": "b6c062ae19c570ac5eac9a39ef542ac24aad84523cbd4f420a9a0bf747fb78cb"
+    },
+    {
+      "path": "results/plots/pypots_train_imputed_boxplot.png",
+      "bytes": 29108,
+      "sha256": "b5cc9be31a290f7408f6e1113bd8e6f0d195a6f9186ce822d681e05fc437f8f7"
+    },
+    {
+      "path": "results/plots/pypots_train_imputed_correlation.png",
+      "bytes": 24080,
+      "sha256": "4a023da5cf2ea621ffb76b5ef604b0a2a902b4ae7a4ac2f755f1cf87db830a6b"
+    },
+    {
+      "path": "results/plots/pypots_val_imputed_after_imputation_distribution.png",
+      "bytes": 47177,
+      "sha256": "99138c06d3ffb734255491849509533753b5a259340d746974291d75de7e58cb"
+    },
+    {
+      "path": "results/plots/pypots_val_imputed_boxplot.png",
+      "bytes": 30157,
+      "sha256": "1e26461132d0d83ed6ee977b595d1298c2a85660efd72c7498beee211f5322ce"
+    },
+    {
+      "path": "results/plots/pypots_val_imputed_correlation.png",
+      "bytes": 20091,
+      "sha256": "ce85213cef9ac1a7fdbb5b0070b917d6fa0d4f78b951450ccf4b9ae87c5095c7"
+    },
+    {
+      "path": "results/plots/test_imputed_after_imputation_distribution.png",
+      "bytes": 46766,
+      "sha256": "4e36a481e01d3a07e07796702ff761f66353a1573707e79e1133250d2912561e"
+    },
+    {
+      "path": "results/plots/test_imputed_boxplot.png",
+      "bytes": 21103,
+      "sha256": "9862fecff4b9fa1022c7c68d9826ac980905b0c38d82ad4cb6f68d2a0e9194f9"
+    },
+    {
+      "path": "results/plots/test_imputed_correlation.png",
+      "bytes": 21488,
+      "sha256": "e24bec06bc279e5fcfdea6caffa8045e025192cb2f06a07e643dc5e20cd030f0"
+    },
+    {
+      "path": "results/plots/timeseries_AQI_station_0.png",
+      "bytes": 113037,
+      "sha256": "496cba64d27caaabdc005193e923797ecc698f5113fbe48001989b6b4f853df8"
+    },
+    {
+      "path": "results/plots/timeseries_AQI_station_1.png",
+      "bytes": 103532,
+      "sha256": "c5bb8a3ec0adea23317137b8acc553f9817e7a66cd514d2740616b57a744ba72"
+    },
+    {
+      "path": "results/plots/timeseries_AQI_station_2.png",
+      "bytes": 119338,
+      "sha256": "34928169a09c21e6ecb8b392477df5123be9772fbacf1df4df7e0ece54a87b75"
+    },
+    {
+      "path": "results/plots/timeseries_PM10_station_0.png",
+      "bytes": 98364,
+      "sha256": "174b9b37c31adbd4d52f51fdf75af3cc1dc4976faf35325770fc73b1683c9719"
+    },
+    {
+      "path": "results/plots/timeseries_PM10_station_1.png",
+      "bytes": 94236,
+      "sha256": "5e2f3fd1297c65926369775c3d849c1111fbcfcebab9841eb56637b5c3991cb4"
+    },
+    {
+      "path": "results/plots/timeseries_PM10_station_2.png",
+      "bytes": 104662,
+      "sha256": "c10f2828258b5cb5c6bc7dcae227cd6ec9db334f7dc995a07beeb0a2c6bc759e"
+    },
+    {
+      "path": "results/plots/timeseries_PM2.5_station_0.png",
+      "bytes": 100730,
+      "sha256": "d3bdbe2396274a886c4f154894a148984a4166bfccce3cbd581307b89214f253"
+    },
+    {
+      "path": "results/plots/timeseries_PM2.5_station_1.png",
+      "bytes": 114918,
+      "sha256": "09edef61024e0628a499f52ece25325b2e32ef4127401921d0a58f27d9cec774"
+    },
+    {
+      "path": "results/plots/timeseries_PM2.5_station_2.png",
+      "bytes": 115280,
+      "sha256": "2de5fbe0b04949eb283d87169683ce4828091ddb93bb3390b957f66e84e29abf"
+    },
+    {
+      "path": "results/plots/train_imputed_after_imputation_distribution.png",
+      "bytes": 54048,
+      "sha256": "f357a7bdf6a774ad77bfb139fb4e325a3d07c5172b534608422a218bb1a4cba4"
+    },
+    {
+      "path": "results/plots/train_imputed_boxplot.png",
+      "bytes": 20913,
+      "sha256": "0aa3e99ef08c300480339a7f309f993cd4d3ab8b845049d965cad59384b9712b"
+    },
+    {
+      "path": "results/plots/train_imputed_correlation.png",
+      "bytes": 21383,
+      "sha256": "b43d8d017d8bd94df859e1f80c5610518536dca412cd54c1c07a672f50c15b8f"
+    },
+    {
+      "path": "results/plots/val_imputed_after_imputation_distribution.png",
+      "bytes": 45275,
+      "sha256": "205ef893fb9786b8d294a62ea0cb98bacf559d63760be2bb03ca103b3d71fcad"
+    },
+    {
+      "path": "results/plots/val_imputed_boxplot.png",
+      "bytes": 19277,
+      "sha256": "3b47fdba53cb89c57f39bdfddd4586be63b967dde6e7c18d780829957b1ed3a1"
+    },
+    {
+      "path": "results/plots/val_imputed_correlation.png",
+      "bytes": 19423,
+      "sha256": "8c72a268dbb06defe9c904a179338c4022f792448bf9add5333ef97b6731ca7c"
+    },
+    {
+      "path": "result_saving/air_quality_2025_01/2025_01/monthly_report.csv",
+      "bytes": 1321,
+      "sha256": "b88e54f8beede751f5734ebff1563a15a5da20c4e778c37dc9ea4195afa54c6e"
+    },
+    {
+      "path": "legacy_algorithms/__init__.py",
+      "bytes": 152,
+      "sha256": "e67c064a41945de18d00a60d17159c717fe4b9bccc7cc659d64d8317efec7973"
+    },
+    {
+      "path": "legacy_algorithms/data_imputation.py",
+      "bytes": 29687,
+      "sha256": "84c9b6b16e2f59dd8610f18f106cf53ad86e06f50133681c754c097c9d3515d0"
+    },
+    {
+      "path": "legacy_algorithms/data_preprocessing.py",
+      "bytes": 8008,
+      "sha256": "03914e93c305e1782894e90354ced13bbb2f30c94105cdf1124d0d8f87a0b8a6"
+    },
+    {
+      "path": "legacy_algorithms/legal_supervision.py",
+      "bytes": 13438,
+      "sha256": "5748c6768e2019adac04fca254550ef994da4304a4b8a730dccc84864199a9e5"
+    },
+    {
+      "path": "legacy_algorithms/train_all_models.py",
+      "bytes": 7319,
+      "sha256": "b1baca7946e9444f42e08a074982f88ea516f0a3c709828bb240cf7d179d0e35"
+    }
+  ]
+}

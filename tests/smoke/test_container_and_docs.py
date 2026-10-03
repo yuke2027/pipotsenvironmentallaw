@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[2] / "docs" / "legacy"
 
 
 @pytest.mark.smoke
@@ -41,9 +41,27 @@ def test_documented_cli_help_matches_the_parser() -> None:
     assert "python -m app.cli --help" in readme
     assert "python -m app.cli import-csv --help" in readme
     assert "platform" in deployment
-    from app.cli import build_parser
+    from app.legacy_cli import build_parser
 
     parser = build_parser()
     help_text = parser.format_help()
     assert "import-csv" in help_text
     assert "serve" in help_text
+
+
+@pytest.mark.smoke
+def test_platform_image_contains_the_online_acceptance_report() -> None:
+    repository = ROOT.parents[1]
+    dockerfile = (repository / "Dockerfile.platform").read_text(encoding="utf-8")
+    assert "COPY scripts/online_acceptance_report.py ./scripts/online_acceptance_report.py" in dockerfile
+    assert "COPY scripts/verify_acceptance.py ./scripts/verify_acceptance.py" in dockerfile
+    assert (repository / "scripts" / "online_acceptance_report.py").is_file()
+
+
+@pytest.mark.smoke
+def test_acceptance_stack_initializes_isolated_schema_before_workers() -> None:
+    repository = ROOT.parents[1]
+    compose = (repository / "compose.acceptance.yml").read_text(encoding="utf-8")
+    assert "acceptance-migrate:" in compose
+    assert '"scripts.prepare_acceptance"' in compose
+    assert compose.count("service_completed_successfully") >= 3

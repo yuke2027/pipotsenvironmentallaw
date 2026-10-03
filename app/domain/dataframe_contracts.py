@@ -155,6 +155,7 @@ def validate_tensor(
     feature_order: Sequence[str],
     context: str,
     allow_nan: bool,
+    allow_negative: bool = False,
     expected_shape: tuple[int, ...] | None = None,
 ) -> FloatArray:
     validate_feature_order(feature_order, context)
@@ -174,7 +175,7 @@ def validate_tensor(
         raise AlgorithmContractError(
             f"{context} must contain finite values" + (" or NaN" if allow_nan else "")
         )
-    if np.nanmin(numeric, initial=0.0) < 0:
+    if not allow_negative and np.nanmin(numeric, initial=0.0) < 0:
         raise AlgorithmContractError(f"{context} must not contain negative values")
     return numeric
 

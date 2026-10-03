@@ -17,7 +17,7 @@ _SENSITIVE_LABEL = (
 _SECRET_IN_TEXT = re.compile(
     rf"(?P<key>\b{_SENSITIVE_LABEL}\b)"
     r"(?P<separator>\s*(?:=|:)\s*)"
-    r"(?P<value>\"[^\"]*\"|'[^']*'|[^\s,;\]\)}}]+)",
+    r"(?P<value>\"[^\"]*\"|'[^']*'|(?:Bearer|Basic)\s+[^\s,;\]\)}}]+|[^\s,;\]\)}}]+)",
     re.IGNORECASE,
 )
 

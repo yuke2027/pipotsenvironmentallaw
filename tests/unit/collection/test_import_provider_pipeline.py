@@ -11,7 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.adapters.http.retry import ExternalCaller, StepClock
 from app.adapters.providers.cnemc import CNEMCPublicProvider
-from app.cli import build_parser, resolve_import_directory
+from app.legacy_cli import build_parser, resolve_import_directory
 from app.core.paths import PathSettings
 from app.db.models import City, Station
 from app.db.types import utc_now

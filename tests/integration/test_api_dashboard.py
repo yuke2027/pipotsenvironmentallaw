@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 
 from app.core.config import SettingsStartupError, load_settings
 from app.db.session import sqlite_file_url
-from app.main import create_app
+from app.legacy_main import create_app
 
 _PASSWORD = "AdminPass#2026"
 

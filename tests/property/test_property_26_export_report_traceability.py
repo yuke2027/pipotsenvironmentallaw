@@ -23,6 +23,9 @@ _FONT_CANDIDATES = (
     Path(r"C:\Windows\Fonts\simhei.ttf"),
     Path(r"C:\Windows\Fonts\msyh.ttf"),
     Path(r"C:\Windows\Fonts\simsun.ttc"),
+    Path("/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"),
+    Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
+    Path("/usr/share/fonts/opentype/noto/NotoSansCJKSC-Regular.otf"),
 )
 
 
@@ -54,7 +57,7 @@ def _text(path: Path, fmt: str) -> str:
         while index < len(body):
             if body[index] == 0x5C and index + 1 < len(body):
                 code = body[index + 1]
-                if 48 <= code <= 55:
+                if index + 3 < len(body) and 48 <= code <= 55 and all(48 <= value <= 55 for value in body[index + 1 : index + 4]):
                     digits = body[index + 1 : index + 4]
                     output.append(int(digits.decode("ascii"), 8))
                     index += 1 + len(digits)

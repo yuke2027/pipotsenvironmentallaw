@@ -1,0 +1,10 @@
+services:
+  model-worker:
+    image: environmental-platform-models:local
+    build:
+      context: .
+      dockerfile: Dockerfile.models
+      target: models
+    environment:
+      ESP_MODEL_DEVICE: cpu
+      ESP_MODEL_EPOCHS: ${ESP_MODEL_EPOCHS:-20}

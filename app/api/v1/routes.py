@@ -97,16 +97,17 @@ def _guard(request: Request, operation: Operation) -> Principal:
     token = token_from_authorization(request.headers.get("authorization"))
     with SqlAlchemyUnitOfWork(context.sessions) as unit:
         service = AuthService(unit.auth, unit.audit, context.settings, SystemClock())
-        principal = access_protected(
-            token,
-            operation,
-            auth_service=service,
-            audit=unit.audit,
-            clock=SystemClock(),
-            business=lambda _payload: None,
-        )
-        unit.commit()
-        return principal
+        try:
+            return access_protected(
+                token,
+                operation,
+                auth_service=service,
+                audit=unit.audit,
+                clock=SystemClock(),
+                business=lambda _payload: None,
+            )
+        finally:
+            unit.commit()
 
 
 def _page(items: Sequence[object], total: int | None = None) -> dict[str, object]:
@@ -129,8 +130,10 @@ def login(body: LoginBody, request: Request) -> dict[str, object]:
     context = _context(request)
     with SqlAlchemyUnitOfWork(context.sessions) as unit:
         service = AuthService(unit.auth, unit.audit, context.settings, SystemClock())
-        result = service.login(body.username, body.password)
-        unit.commit()
+        try:
+            result = service.login(body.username, body.password)
+        finally:
+            unit.commit()
     return {
         "access_token": result.access_token,
         "token_type": result.token_type,

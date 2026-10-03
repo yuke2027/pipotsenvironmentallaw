@@ -1,0 +1,13 @@
+FROM environmental-platform-models:local
+
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements-test.lock /tmp/requirements-test.lock
+RUN pip install --no-cache-dir -r /tmp/requirements-test.lock
+
+USER platform
+WORKDIR /workspace
+CMD ["python", "-m", "pytest", "-o", "addopts=", "-q"]

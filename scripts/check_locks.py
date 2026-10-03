@@ -34,6 +34,7 @@ def main() -> int:
     runtime = root / "requirements.txt"
     test = root / "requirements-test.txt"
     runtime_lock = root / "requirements.lock"
+    platform_lock = root / "requirements-platform.lock"
     test_lock = root / "requirements-test.lock"
 
     runtime_lines = requirement_lines(runtime)
@@ -41,9 +42,10 @@ def main() -> int:
     failures = [*validate(runtime), *validate(test)]
     if requirement_lines(runtime_lock) != runtime_lines:
         failures.append("requirements.lock does not exactly match requirements.txt")
-    if requirement_lines(test_lock) != [*runtime_lines, *test_lines]:
+    platform_lines = requirement_lines(platform_lock)
+    if requirement_lines(test_lock) != [*platform_lines, *test_lines]:
         failures.append(
-            "requirements-test.lock does not contain the exact runtime and test dependency set"
+            "requirements-test.lock does not contain the exact platform and test dependency set"
         )
 
     if failures:

@@ -1,0 +1,4 @@
+-r requirements-platform.in
+lightgbm>=4.6,<5
+pypots>=1.0,<2
+torch>=2.6,<3

@@ -1,0 +1,11 @@
+services:
+  api:
+    volumes: ["./app:/workspace/app:ro"]
+  worker:
+    volumes: ["./app:/workspace/app:ro"]
+  model-worker:
+    volumes: ["./app:/workspace/app:ro"]
+  scheduler:
+    volumes: ["./app:/workspace/app:ro"]
+  migrate:
+    volumes: ["./app:/workspace/app:ro"]

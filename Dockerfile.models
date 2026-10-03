@@ -1,0 +1,10 @@
+FROM environmental-platform-api:local AS models
+USER root
+ARG TORCH_INDEX=https://download.pytorch.org/whl/cpu
+RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir torch==2.7.1 --index-url ${TORCH_INDEX}
+COPY requirements-ml.lock ./
+RUN sed '/^torch==/d' requirements-ml.lock > /tmp/models-requirements.txt && pip install --no-cache-dir -r /tmp/models-requirements.txt
+RUN pip freeze > /workspace/model-environment.lock
+USER platform
+CMD ["celery", "-A", "app.v2.tasks:celery_app", "worker", "-Q", "models", "--concurrency=1", "--loglevel=INFO"]

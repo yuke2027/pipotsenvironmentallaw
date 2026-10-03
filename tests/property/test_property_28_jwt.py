@@ -57,7 +57,8 @@ def test_property_28_jwt_issue_and_reject(role: str, ttl: int, defect: str) -> N
     if defect == "missing":
         token = None
     elif defect == "tampered":
-        token = logged_in.access_token[:-1] + ("a" if logged_in.access_token[-1] != "a" else "b")
+        header, payload, signature = logged_in.access_token.split(".")
+        token = f"{header}.{payload}.{'a' if signature[0] != 'a' else 'b'}{signature[1:]}"
     elif defect == "expired":
         clock.advance(ttl)
     elif defect == "revoked":

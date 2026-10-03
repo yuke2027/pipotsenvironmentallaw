@@ -95,6 +95,7 @@ class SqlAlchemyStandardsRepository:
         statement = select(LegalStandard).order_by(LegalStandard.id)
         if pollutant is not None:
             statement = statement.where(LegalStandard.pollutant == pollutant)
+        rows: list[LegalStandard]
         rows, total = paginate(self._session, statement, page, page_size)
         return Page(
             items=tuple(_standard_record(row) for row in rows),
@@ -210,6 +211,7 @@ class SqlAlchemyAnalysisRepository:
         return row.id
 
     def list_compliance(self, page: int, page_size: int) -> Page[ComplianceRecord]:
+        rows: list[ComplianceResult]
         rows, total = paginate(
             self._session,
             select(ComplianceResult).order_by(ComplianceResult.id),
@@ -415,6 +417,7 @@ class SqlAlchemyAlertRepository:
         return row.id
 
     def list_alerts(self, page: int, page_size: int) -> Page[AlertRecord]:
+        rows: list[Alert]
         rows, total = paginate(self._session, select(Alert).order_by(Alert.id), page, page_size)
         return Page(
             items=tuple(
@@ -463,6 +466,7 @@ class SqlAlchemyAuthRepository:
         return None if row is None else _user_record(row)
 
     def list_users(self, page: int, page_size: int) -> Page[UserRecord]:
+        rows: list[User]
         rows, total = paginate(self._session, select(User).order_by(User.id), page, page_size)
         return Page(
             items=tuple(_user_record(row) for row in rows),
@@ -573,6 +577,7 @@ class SqlAlchemyAuditRepository:
         return row.id
 
     def list_entries(self, page: int, page_size: int) -> Page[AuditRecord]:
+        rows: list[AuditLog]
         rows, total = paginate(
             self._session,
             select(AuditLog).order_by(AuditLog.id),

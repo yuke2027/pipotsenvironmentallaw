@@ -1,0 +1,15 @@
+FROM python:3.12-slim AS platform
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /workspace
+COPY requirements-platform.lock ./
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends fonts-noto-cjk fonts-wqy-zenhei \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir -r requirements-platform.lock
+COPY app ./app
+COPY scripts/online_acceptance_report.py ./scripts/online_acceptance_report.py
+COPY scripts/verify_acceptance.py ./scripts/verify_acceptance.py
+COPY alembic-v2.ini ./
+RUN useradd --uid 10001 --create-home platform && mkdir -p /workspace/var/platform && chown -R platform:platform /workspace/var
+USER platform
+CMD ["uvicorn", "app.v2.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]

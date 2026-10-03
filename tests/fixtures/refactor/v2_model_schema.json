@@ -1,0 +1,164 @@
+{
+  "v2_aqi_results": {
+    "table": "CREATE TABLE v2_aqi_results (\n\tstation_id VARCHAR(36) NOT NULL, \n\tlocal_date DATE NOT NULL, \n\tvalue INTEGER, \n\tcomponents JSON NOT NULL, \n\tcomplete BOOLEAN NOT NULL, \n\tversion VARCHAR(32) NOT NULL, \n\tsnapshot_hash VARCHAR(64) NOT NULL, \n\tis_current BOOLEAN NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (station_id, local_date, snapshot_hash, version), \n\tFOREIGN KEY(station_id) REFERENCES v2_stations (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_aqi_results_local_date ON v2_aqi_results (local_date)"
+    ]
+  },
+  "v2_attachments": {
+    "table": "CREATE TABLE v2_attachments (\n\tinspection_id VARCHAR(36), \n\tenterprise_id VARCHAR(36), \n\towner_id VARCHAR(36) NOT NULL, \n\toriginal_name VARCHAR(240) NOT NULL, \n\tmime VARCHAR(100) NOT NULL, \n\tsize INTEGER NOT NULL, \n\tsha256 VARCHAR(64) NOT NULL, \n\tstorage_key TEXT NOT NULL, \n\treplaces_id VARCHAR(36), \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(inspection_id) REFERENCES v2_inspections (id), \n\tFOREIGN KEY(enterprise_id) REFERENCES v2_enterprises (id), \n\tFOREIGN KEY(owner_id) REFERENCES v2_users (id), \n\tFOREIGN KEY(replaces_id) REFERENCES v2_attachments (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_attachments_enterprise_id ON v2_attachments (enterprise_id)",
+      "CREATE INDEX ix_v2_attachments_inspection_id ON v2_attachments (inspection_id)"
+    ]
+  },
+  "v2_audits": {
+    "table": "CREATE TABLE v2_audits (\n\tactor_id VARCHAR(36), \n\taction VARCHAR(80) NOT NULL, \n\tobject_type VARCHAR(80) NOT NULL, \n\tobject_id VARCHAR(64), \n\tdetail JSON NOT NULL, \n\trequest_id VARCHAR(64), \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(actor_id) REFERENCES v2_users (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_audits_action ON v2_audits (action)"
+    ]
+  },
+  "v2_channels": {
+    "table": "CREATE TABLE v2_channels (\n\tname VARCHAR(120) NOT NULL, \n\tkind VARCHAR(20) NOT NULL, \n\tconfig JSON NOT NULL, \n\tcredential_ref VARCHAR(120), \n\tenabled BOOLEAN NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id)\n)",
+    "indexes": []
+  },
+  "v2_cities": {
+    "table": "CREATE TABLE v2_cities (\n\tcode VARCHAR(30) NOT NULL, \n\tname VARCHAR(80) NOT NULL, \n\ttimezone VARCHAR(40) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (code)\n)",
+    "indexes": []
+  },
+  "v2_deliveries": {
+    "table": "CREATE TABLE v2_deliveries (\n\tnotification_id VARCHAR(36) NOT NULL, \n\tchannel_id VARCHAR(36) NOT NULL, \n\tstatus VARCHAR(24) NOT NULL, \n\tattempts INTEGER NOT NULL, \n\terror TEXT, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (notification_id, channel_id), \n\tFOREIGN KEY(notification_id) REFERENCES v2_notifications (id), \n\tFOREIGN KEY(channel_id) REFERENCES v2_channels (id)\n)",
+    "indexes": []
+  },
+  "v2_derived_values": {
+    "table": "CREATE TABLE v2_derived_values (\n\tstation_id VARCHAR(36) NOT NULL, \n\tobserved_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tpollutant VARCHAR(16) NOT NULL, \n\tkind VARCHAR(20) NOT NULL, \n\tvalue FLOAT NOT NULL, \n\tlower FLOAT, \n\tupper FLOAT, \n\tmodel_id VARCHAR(36), \n\tjob_id VARCHAR(36) NOT NULL, \n\tdata_cutoff TIMESTAMP WITH TIME ZONE NOT NULL, \n\tsnapshot_hash VARCHAR(64) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (job_id, station_id, observed_at, pollutant, kind), \n\tFOREIGN KEY(station_id) REFERENCES v2_stations (id), \n\tFOREIGN KEY(model_id) REFERENCES v2_models (id), \n\tFOREIGN KEY(job_id) REFERENCES v2_jobs (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_derived_values_observed_at ON v2_derived_values (observed_at)",
+      "CREATE INDEX ix_v2_derived_values_station_id ON v2_derived_values (station_id)"
+    ]
+  },
+  "v2_enterprise_records": {
+    "table": "CREATE TABLE v2_enterprise_records (\n\tenterprise_id VARCHAR(36) NOT NULL, \n\tkind VARCHAR(20) NOT NULL, \n\tname VARCHAR(200) NOT NULL, \n\tdetails JSON NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(enterprise_id) REFERENCES v2_enterprises (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_enterprise_records_enterprise_id ON v2_enterprise_records (enterprise_id)"
+    ]
+  },
+  "v2_enterprises": {
+    "table": "CREATE TABLE v2_enterprises (\n\tname VARCHAR(200) NOT NULL, \n\tcredit_code VARCHAR(18), \n\tindustry VARCHAR(100) NOT NULL, \n\taddress TEXT NOT NULL, \n\tcontact VARCHAR(200) NOT NULL, \n\tversion INTEGER NOT NULL, \n\tcreated_by VARCHAR(36) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (credit_code), \n\tFOREIGN KEY(created_by) REFERENCES v2_users (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_enterprises_name ON v2_enterprises (name)"
+    ]
+  },
+  "v2_evaluations": {
+    "table": "CREATE TABLE v2_evaluations (\n\tstation_id VARCHAR(36) NOT NULL, \n\tlocal_date DATE NOT NULL, \n\tpollutant VARCHAR(16) NOT NULL, \n\tbasis VARCHAR(24) NOT NULL, \n\tstandard_id VARCHAR(36) NOT NULL, \n\tstandard_snapshot JSON NOT NULL, \n\tsnapshot_hash VARCHAR(64) NOT NULL, \n\tvalid_points INTEGER NOT NULL, \n\tvalue FLOAT, \n\texceed_ratio FLOAT, \n\tstatus VARCHAR(24) NOT NULL, \n\tis_current BOOLEAN NOT NULL, \n\tjob_id VARCHAR(36), \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (station_id, local_date, pollutant, basis, snapshot_hash, standard_id), \n\tFOREIGN KEY(station_id) REFERENCES v2_stations (id), \n\tFOREIGN KEY(standard_id) REFERENCES v2_standards (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_evaluations_local_date ON v2_evaluations (local_date)",
+      "CREATE INDEX ix_v2_evaluations_station_id ON v2_evaluations (station_id)"
+    ]
+  },
+  "v2_inspections": {
+    "table": "CREATE TABLE v2_inspections (\n\ttitle VARCHAR(200) NOT NULL, \n\tlead_id VARCHAR(36), \n\tenterprise_id VARCHAR(36), \n\tassignee_id VARCHAR(36) NOT NULL, \n\tcollaborators JSON NOT NULL, \n\tcreated_by VARCHAR(36) NOT NULL, \n\tstatus VARCHAR(32) NOT NULL, \n\tdue_date DATE, \n\tfacts TEXT NOT NULL, \n\tlegal_references JSON NOT NULL, \n\tversion INTEGER NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (lead_id), \n\tFOREIGN KEY(lead_id) REFERENCES v2_leads (id), \n\tFOREIGN KEY(enterprise_id) REFERENCES v2_enterprises (id), \n\tFOREIGN KEY(assignee_id) REFERENCES v2_users (id), \n\tFOREIGN KEY(created_by) REFERENCES v2_users (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_inspections_assignee_id ON v2_inspections (assignee_id)",
+      "CREATE INDEX ix_v2_inspections_status ON v2_inspections (status)"
+    ]
+  },
+  "v2_jobs": {
+    "table": "CREATE TABLE v2_jobs (\n\tkind VARCHAR(40) NOT NULL, \n\towner_id VARCHAR(36), \n\tparameters JSON NOT NULL, \n\tstatus VARCHAR(24) NOT NULL, \n\tprogress INTEGER NOT NULL, \n\tprogress_stage VARCHAR(80), \n\tprogress_message VARCHAR(240), \n\tresult JSON NOT NULL, \n\terror TEXT, \n\tattempts INTEGER NOT NULL, \n\ttarget_key VARCHAR(160) NOT NULL, \n\tstarted_at TIMESTAMP WITH TIME ZONE, \n\tfinished_at TIMESTAMP WITH TIME ZONE, \n\theartbeat_at TIMESTAMP WITH TIME ZONE, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(owner_id) REFERENCES v2_users (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_jobs_kind ON v2_jobs (kind)",
+      "CREATE INDEX ix_v2_jobs_status ON v2_jobs (status)",
+      "CREATE INDEX ix_v2_jobs_status_heartbeat ON v2_jobs (status, heartbeat_at)",
+      "CREATE INDEX ix_v2_jobs_target_key ON v2_jobs (target_key)"
+    ]
+  },
+  "v2_laws": {
+    "table": "CREATE TABLE v2_laws (\n\ttitle VARCHAR(240) NOT NULL, \n\tregion VARCHAR(80) NOT NULL, \n\teffective_from DATE NOT NULL, \n\teffective_to DATE, \n\tsource_url TEXT NOT NULL, \n\tsummary TEXT NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (title)\n)",
+    "indexes": []
+  },
+  "v2_leads": {
+    "table": "CREATE TABLE v2_leads (\n\ttitle VARCHAR(200) NOT NULL, \n\tdescription TEXT NOT NULL, \n\tstation_id VARCHAR(36), \n\tenterprise_id VARCHAR(36), \n\tevaluation_id VARCHAR(36), \n\tstatus VARCHAR(24) NOT NULL, \n\tpriority VARCHAR(20) NOT NULL, \n\tcreated_by VARCHAR(36), \n\treason TEXT, \n\tclaimed_by VARCHAR(36), \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(station_id) REFERENCES v2_stations (id), \n\tFOREIGN KEY(enterprise_id) REFERENCES v2_enterprises (id), \n\tUNIQUE (evaluation_id), \n\tFOREIGN KEY(evaluation_id) REFERENCES v2_evaluations (id), \n\tFOREIGN KEY(created_by) REFERENCES v2_users (id), \n\tFOREIGN KEY(claimed_by) REFERENCES v2_users (id)\n)",
+    "indexes": []
+  },
+  "v2_model_activations": {
+    "table": "CREATE TABLE v2_model_activations (\n\ttask VARCHAR(24) NOT NULL, \n\tmodel_id VARCHAR(36) NOT NULL, \n\tprevious_id VARCHAR(36), \n\tupdated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (task), \n\tFOREIGN KEY(model_id) REFERENCES v2_models (id), \n\tFOREIGN KEY(previous_id) REFERENCES v2_models (id)\n)",
+    "indexes": []
+  },
+  "v2_models": {
+    "table": "CREATE TABLE v2_models (\n\ttask VARCHAR(24) NOT NULL, \n\talgorithm VARCHAR(40) NOT NULL, \n\tstatus VARCHAR(24) NOT NULL, \n\tstorage_key TEXT NOT NULL, \n\tsha256 VARCHAR(64) NOT NULL, \n\tmanifest JSON NOT NULL, \n\tmetrics JSON NOT NULL, \n\tjob_id VARCHAR(36) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(job_id) REFERENCES v2_jobs (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_models_task_status ON v2_models (task, status)"
+    ]
+  },
+  "v2_notifications": {
+    "table": "CREATE TABLE v2_notifications (\n\tuser_id VARCHAR(36) NOT NULL, \n\ttitle VARCHAR(200) NOT NULL, \n\tbody TEXT NOT NULL, \n\thref VARCHAR(240) NOT NULL, \n\tdedupe_key VARCHAR(200) NOT NULL, \n\tread_at TIMESTAMP WITH TIME ZONE, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (user_id, dedupe_key), \n\tFOREIGN KEY(user_id) REFERENCES v2_users (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_notifications_user_id ON v2_notifications (user_id)"
+    ]
+  },
+  "v2_observations": {
+    "table": "CREATE TABLE v2_observations (\n\tsource_file_id VARCHAR(36) NOT NULL, \n\tstation_id VARCHAR(36) NOT NULL, \n\tobserved_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tlocal_date DATE NOT NULL, \n\tpollutant VARCHAR(16) NOT NULL, \n\tbasis VARCHAR(24) NOT NULL, \n\tvalue FLOAT, \n\tunit VARCHAR(20) NOT NULL, \n\tquality VARCHAR(20) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (source_file_id, station_id, observed_at, pollutant, basis), \n\tFOREIGN KEY(source_file_id) REFERENCES v2_source_files (id), \n\tFOREIGN KEY(station_id) REFERENCES v2_stations (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_obs_date_basis_pollutant ON v2_observations (local_date, basis, pollutant, station_id)",
+      "CREATE INDEX ix_v2_obs_station_pollutant_time ON v2_observations (station_id, pollutant, observed_at)",
+      "CREATE INDEX ix_v2_obs_time_pollutant ON v2_observations (observed_at, pollutant)",
+      "CREATE INDEX ix_v2_observations_local_date ON v2_observations (local_date)",
+      "CREATE INDEX ix_v2_observations_source_file_id ON v2_observations (source_file_id)"
+    ]
+  },
+  "v2_outbox": {
+    "table": "CREATE TABLE v2_outbox (\n\tjob_id VARCHAR(36) NOT NULL, \n\tsent_at TIMESTAMP WITH TIME ZONE, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (job_id), \n\tFOREIGN KEY(job_id) REFERENCES v2_jobs (id)\n)",
+    "indexes": []
+  },
+  "v2_rectifications": {
+    "table": "CREATE TABLE v2_rectifications (\n\tinspection_id VARCHAR(36) NOT NULL, \n\trequirement TEXT NOT NULL, \n\tdue_date DATE NOT NULL, \n\tresponse TEXT NOT NULL, \n\treview_note TEXT NOT NULL, \n\tstatus VARCHAR(24) NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(inspection_id) REFERENCES v2_inspections (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_rectifications_inspection_id ON v2_rectifications (inspection_id)"
+    ]
+  },
+  "v2_sessions": {
+    "table": "CREATE TABLE v2_sessions (\n\tuser_id VARCHAR(36) NOT NULL, \n\ttoken_hash VARCHAR(64) NOT NULL, \n\tcsrf_hash VARCHAR(64) NOT NULL, \n\texpires_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\trevoked BOOLEAN NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(user_id) REFERENCES v2_users (id), \n\tUNIQUE (token_hash)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_sessions_expires_at ON v2_sessions (expires_at)",
+      "CREATE INDEX ix_v2_sessions_user_id ON v2_sessions (user_id)"
+    ]
+  },
+  "v2_source_attempts": {
+    "table": "CREATE TABLE v2_source_attempts (\n\tlocal_date DATE NOT NULL, \n\tkind VARCHAR(20) NOT NULL, \n\tstatus VARCHAR(20) NOT NULL, \n\tmessage TEXT, \n\tjob_id VARCHAR(36), \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_source_attempts_date_kind_status ON v2_source_attempts (local_date, kind, status)",
+      "CREATE INDEX ix_v2_source_attempts_local_date ON v2_source_attempts (local_date)"
+    ]
+  },
+  "v2_source_files": {
+    "table": "CREATE TABLE v2_source_files (\n\tsource_key VARCHAR(200) NOT NULL, \n\tlocal_date DATE NOT NULL, \n\tkind VARCHAR(20) NOT NULL, \n\torigin VARCHAR(20) NOT NULL, \n\turl TEXT, \n\tsha256 VARCHAR(64) NOT NULL, \n\tstorage_key TEXT NOT NULL, \n\tis_current BOOLEAN NOT NULL, \n\trow_count INTEGER NOT NULL, \n\tinvalid_count INTEGER NOT NULL, \n\tattribution TEXT NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (source_key, sha256)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_source_current_date ON v2_source_files (is_current, local_date)",
+      "CREATE INDEX ix_v2_source_files_source_key ON v2_source_files (source_key)"
+    ]
+  },
+  "v2_standards": {
+    "table": "CREATE TABLE v2_standards (\n\tcode VARCHAR(80) NOT NULL, \n\tpollutant VARCHAR(16) NOT NULL, \n\tbasis VARCHAR(24) NOT NULL, \n\tgrade VARCHAR(16) NOT NULL, \n\tregion VARCHAR(80) NOT NULL, \n\tlimit_value FLOAT NOT NULL, \n\tunit VARCHAR(20) NOT NULL, \n\tmin_points INTEGER NOT NULL, \n\teffective_from DATE NOT NULL, \n\teffective_to DATE, \n\tsource_url TEXT NOT NULL, \n\tarticle TEXT NOT NULL, \n\tenabled BOOLEAN NOT NULL, \n\tversion INTEGER NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (code, pollutant, basis, grade, effective_from)\n)",
+    "indexes": []
+  },
+  "v2_station_aliases": {
+    "table": "CREATE TABLE v2_station_aliases (\n\tstation_id VARCHAR(36) NOT NULL, \n\tprovider VARCHAR(50) NOT NULL, \n\texternal_name VARCHAR(100) NOT NULL, \n\tvalid_from DATE NOT NULL, \n\tvalid_to DATE, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (provider, external_name, valid_from), \n\tFOREIGN KEY(station_id) REFERENCES v2_stations (id)\n)",
+    "indexes": []
+  },
+  "v2_stations": {
+    "table": "CREATE TABLE v2_stations (\n\tcity_id VARCHAR(36) NOT NULL, \n\tcode VARCHAR(100) NOT NULL, \n\tname VARCHAR(100) NOT NULL, \n\tlatitude FLOAT, \n\tlongitude FLOAT, \n\tactive BOOLEAN NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (city_id, code), \n\tFOREIGN KEY(city_id) REFERENCES v2_cities (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_stations_city_id ON v2_stations (city_id)"
+    ]
+  },
+  "v2_users": {
+    "table": "CREATE TABLE v2_users (\n\tusername VARCHAR(80) NOT NULL, \n\tdisplay_name VARCHAR(80) NOT NULL, \n\tpassword_hash TEXT NOT NULL, \n\trole VARCHAR(32) NOT NULL, \n\tactive BOOLEAN NOT NULL, \n\tmust_change_password BOOLEAN NOT NULL, \n\tfailed_logins INTEGER NOT NULL, \n\tlocked_until TIMESTAMP WITH TIME ZONE, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tUNIQUE (username)\n)",
+    "indexes": []
+  },
+  "v2_workflow_events": {
+    "table": "CREATE TABLE v2_workflow_events (\n\tinspection_id VARCHAR(36) NOT NULL, \n\tactor_id VARCHAR(36) NOT NULL, \n\taction VARCHAR(40) NOT NULL, \n\tfrom_status VARCHAR(32) NOT NULL, \n\tto_status VARCHAR(32) NOT NULL, \n\tnote TEXT NOT NULL, \n\tid VARCHAR(36) NOT NULL, \n\tcreated_at TIMESTAMP WITH TIME ZONE NOT NULL, \n\tPRIMARY KEY (id), \n\tFOREIGN KEY(inspection_id) REFERENCES v2_inspections (id), \n\tFOREIGN KEY(actor_id) REFERENCES v2_users (id)\n)",
+    "indexes": [
+      "CREATE INDEX ix_v2_workflow_events_inspection_id ON v2_workflow_events (inspection_id)"
+    ]
+  }
+}

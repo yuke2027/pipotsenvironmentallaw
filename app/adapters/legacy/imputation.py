@@ -72,14 +72,19 @@ def prepare_training_dataset(daily_frames: Sequence[pd.DataFrame]) -> TrainingDa
             feature_order=feature_order,
             context=f"legacy {split} tensor",
             allow_nan=True,
+            allow_negative=True,
         )
-        original = validate_tensor(
-            raw_dataset[f"{split}_X_ori"],
-            feature_order=feature_order,
-            context=f"legacy {split} original tensor",
-            allow_nan=True,
-            expected_shape=tensor.shape,
-        )
+        if split == "test":
+            original = tensor
+        else:
+            original = validate_tensor(
+                raw_dataset[f"{split}_X_ori"],
+                feature_order=feature_order,
+                context=f"legacy {split} original tensor",
+                allow_nan=True,
+                allow_negative=True,
+                expected_shape=tensor.shape,
+            )
         mask = masks[split]
         if not isinstance(mask, np.ndarray) or mask.dtype != bool or mask.shape != tensor.shape:
             raise AlgorithmContractError(f"legacy {split} mask shape or dtype drifted")
@@ -125,12 +130,14 @@ def to_legacy_dataset(dataset: TrainingDataset) -> dict[str, object]:
             feature_order=dataset.feature_order,
             context=f"training dataset {split}",
             allow_nan=True,
+            allow_negative=True,
         )
         validate_tensor(
             original,
             feature_order=dataset.feature_order,
             context=f"training dataset {split} original",
             allow_nan=True,
+            allow_negative=True,
             expected_shape=checked.shape,
         )
         mask = dataset.masks.get(split)
@@ -165,6 +172,7 @@ def _validate_imputation_result(result: object, dataset: TrainingDataset) -> Imp
             feature_order=dataset.feature_order,
             context=f"legacy imputer {split} result",
             allow_nan=False,
+            allow_negative=True,
             expected_shape=expected_shapes[split],
         )
         for split in _SPLITS

@@ -1,4 +1,14 @@
 .venv
+.venv312
+.tools
+.artifacts
+frontend/node_modules
+frontend/dist
+frontend/test-results
+frontend/playwright-report
+data
+result_saving
+legacy_algorithms
 .git
 .pytest_cache
 .mypy_cache

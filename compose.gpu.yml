@@ -1,0 +1,19 @@
+services:
+  model-worker:
+    image: environmental-platform-models-gpu:local
+    build:
+      context: .
+      dockerfile: Dockerfile.models
+      target: models
+      args:
+        TORCH_INDEX: https://download.pytorch.org/whl/cu128
+    environment:
+      ESP_MODEL_DEVICE: cuda:0
+      ESP_MODEL_EPOCHS: ${ESP_MODEL_EPOCHS:-20}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

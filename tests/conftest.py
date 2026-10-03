@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import ipaddress
 import socket
 from collections.abc import Iterator
 from pathlib import Path
@@ -34,9 +35,20 @@ def block_unmocked_socket(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
             "Real socket access is blocked in tests; use MockTransport or a fake adapter."
         )
 
+    original_connect = socket.socket.connect
+    original_connect_ex = socket.socket.connect_ex
+    def local_connect(sock, address):
+        # Windows asyncio creates its wakeup socket pair over loopback.
+        if isinstance(address, tuple) and ipaddress.ip_address(address[0]).is_loopback:
+            return original_connect(sock, address)
+        return blocked_socket()
+    def local_connect_ex(sock, address):
+        if isinstance(address, tuple) and ipaddress.ip_address(address[0]).is_loopback:
+            return original_connect_ex(sock, address)
+        return blocked_socket()
     monkeypatch.setattr(socket, "create_connection", blocked_socket)
-    monkeypatch.setattr(socket.socket, "connect", blocked_socket)
-    monkeypatch.setattr(socket.socket, "connect_ex", blocked_socket)
+    monkeypatch.setattr(socket.socket, "connect", local_connect)
+    monkeypatch.setattr(socket.socket, "connect_ex", local_connect_ex)
     yield
 
 

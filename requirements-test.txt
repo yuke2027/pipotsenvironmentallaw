@@ -1,8 +1,13 @@
 # Test and developer-only dependencies. Runtime requirements remain separate.
--r requirements.txt
+-r requirements-platform.lock
 hypothesis==6.122.0
 mypy==1.13.0
 pandas-stubs==2.2.3.241126
 pip-tools==7.4.1
 pytest==8.3.4
 pytest-cov==6.0.0
+APScheduler==3.10.4
+Jinja2==3.1.5
+matplotlib==3.9.3
+PyJWT==2.10.1
+seaborn==0.13.2

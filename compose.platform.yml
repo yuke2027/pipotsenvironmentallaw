@@ -1,0 +1,99 @@
+name: environmental-platform
+x-environment: &environment
+  ESP_DATABASE_URL: postgresql+psycopg://platform:${POSTGRES_PASSWORD:-local-development-only}@postgres:5432/platform
+  ESP_REDIS_URL: redis://redis:6379/0
+  ESP_SECRET_KEY: ${ESP_SECRET_KEY:?Run python scripts/configure_platform.py first}
+  ESP_STORAGE_ROOT: /workspace/var/platform
+  ESP_PUBLIC_ORIGIN: ${ESP_PUBLIC_ORIGIN:-http://localhost:8080}
+  ESP_ENVIRONMENT: ${ESP_ENVIRONMENT:-development}
+  ESP_COOKIE_SECURE: ${ESP_COOKIE_SECURE:-false}
+  ESP_SOURCE_LICENSE_CONFIRMED: ${ESP_SOURCE_LICENSE_CONFIRMED:-false}
+x-app: &app
+  image: environmental-platform-api:local
+  build:
+    context: .
+    dockerfile: Dockerfile.platform
+    target: platform
+  environment: *environment
+  volumes:
+    - platform-files:/workspace/var/platform
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+  restart: unless-stopped
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    environment:
+      POSTGRES_DB: platform
+      POSTGRES_USER: platform
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-development-only}
+    volumes:
+      - platform-database:/var/lib/postgresql/data
+    ports: ["127.0.0.1:55432:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U platform -d platform"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  redis:
+    image: redis:7.4.1-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: ["platform-redis:/data"]
+    ports: ["127.0.0.1:56379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  migrate:
+    <<: *app
+    command: ["python", "-m", "app.v2.cli", "migrate"]
+    restart: "no"
+  api:
+    <<: *app
+    ports: ["127.0.0.1:58000:8000"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+  worker:
+    <<: *app
+    command: ["celery", "-A", "app.v2.tasks:celery_app", "worker", "-Q", "io", "--concurrency=2", "--loglevel=INFO"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  model-worker:
+    <<: *app
+    command: ["celery", "-A", "app.v2.tasks:celery_app", "worker", "-Q", "models", "--concurrency=1", "--loglevel=INFO"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  scheduler:
+    <<: *app
+    command: ["python", "-m", "app.v2.scheduler"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  web:
+    image: environmental-platform-web:local
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports: ["127.0.0.1:8080:80"]
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  platform-database:
+  platform-files:
+  platform-redis:
