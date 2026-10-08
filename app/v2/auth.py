@@ -8,7 +8,7 @@ from argon2 import PasswordHasher
 from argon2.exceptions import VerificationError, InvalidHashError
 from fastapi import APIRouter, Depends, Request, Response
 from pydantic import BaseModel, Field
-from app.core.errors import ErrorCode
+from app.v2.shared.http_errors import ErrorCode
 from app.v2.common import fail, serialize
 from app.v2.domains.auth.repository import SqlAlchemyAuthenticationPort
 from app.v2.domains.auth.service import AuthenticationService

@@ -8,7 +8,7 @@ from celery import Celery  # type: ignore[import-untyped]
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
-from app.core.logging import install_sensitive_data_filter
+from app.v2.shared.sensitive_logging import install_sensitive_data_filter
 from app.v2.config import Settings
 from app.v2.db import Database
 from app.v2.domains.jobs.models import Job

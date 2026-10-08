@@ -6,7 +6,7 @@ from typing import Any
 from datetime import datetime
 from sqlalchemy import Boolean, ForeignKey, Integer, JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
-from app.db.types import UtcDateTime
+from app.v2.shared.utc_time import UtcDateTime
 from app.v2.shared.persistence import Base, Entity
 
 

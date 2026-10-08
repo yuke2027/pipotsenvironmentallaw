@@ -1,6 +1,6 @@
 # 环境监测与执法辅助平台
 
-React 中文监管工作台与 FastAPI 业务平台。北京公开空气监测数据、可追溯的模型实验、企业线索与整改核查共用一套真实 API。生产入口统一为 `/api/v2`；原始数据、旧算法、历史制品及旧测试保留。
+React 中文监管工作台与 FastAPI 业务平台。北京公开空气监测数据、可追溯的模型实验、企业线索与整改核查共用一套真实 API。生产入口统一为 `/api/v2`。原始观测数据和历史制品保留；SQLite 旧应用和 `legacy_algorithms` 已从运行树移除。
 
 ## 启动
 
@@ -39,7 +39,7 @@ docker compose -f compose.platform.yml exec api python -m app.cli collect --back
 
 ## 验证
 
-旧实现回归在保留的 Python 3.10 环境运行；新版集成测试只使用真实 PostgreSQL 的隔离 schema，不访问在线来源。真实模型验证与轻量算法测试分开。
+集成测试只使用真实 PostgreSQL 的隔离 schema，不访问在线来源。真实模型验证与轻量算法测试分开。
 
 ```powershell
 docker compose -f compose.platform.yml -f compose.dev.yml run --rm --no-deps -v ./platform_tests:/workspace/platform_tests:ro api python -m unittest discover -s platform_tests -v

@@ -45,5 +45,3 @@ npm run dev
 ```
 
 Vite 代理指向本机 58000 端口。使用 Vite 开发时，将后端 `ESP_PUBLIC_ORIGIN` 设置为 `http://localhost:5173` 并重启 API；生产和验收仍使用各自的同源入口。修改契约后执行后端 `python -m app.cli openapi --output frontend/openapi.json`，再执行前端 `npm run generate:api`。默认认证使用 HttpOnly 会话 Cookie 和 CSRF 请求头；不要在 LocalStorage 保存登录令牌。
-
-旧入口 `app.legacy_main`、`app.legacy_cli` 仅供回归核对，旧命令和文档在 `docs/legacy`。生产部署不启用它们。

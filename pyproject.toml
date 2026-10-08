@@ -11,7 +11,7 @@ requires-python = ">=3.12,<3.13"
 [tool.pytest.ini_options]
 minversion = "8.0"
 testpaths = ["tests"]
-addopts = "-ra --strict-config --strict-markers --cov=app --cov=legacy_algorithms --cov-report=term-missing"
+addopts = "-ra --strict-config --strict-markers --cov=app --cov-report=term-missing"
 markers = [
   "unit: isolated unit tests",
   "property: Hypothesis property-based tests",
@@ -22,7 +22,7 @@ markers = [
 
 [tool.coverage.run]
 branch = true
-source = ["app", "legacy_algorithms"]
+source = ["app"]
 
 [tool.coverage.report]
 show_missing = true

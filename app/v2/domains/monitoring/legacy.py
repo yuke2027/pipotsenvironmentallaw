@@ -10,7 +10,7 @@ from typing import Any
 
 from sqlalchemy import Select, select
 
-from app.core.errors import ErrorCode
+from app.v2.shared.http_errors import ErrorCode
 from app.v2.common import fail
 from app.v2.domains.collection.models import SourceFile
 from app.v2.domains.monitoring.models import Observation, Station

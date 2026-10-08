@@ -8,7 +8,7 @@ from sqlalchemy import Select, cast, or_, select
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Session
 
-from app.core.errors import ErrorCode
+from app.v2.shared.http_errors import ErrorCode
 from app.v2.common import MANAGERS, REGULATORS, audit, fail, page, require_entity, serialize
 from app.v2.domains.enforcement.service import ListFilter
 from app.v2.domains.admin.models import Law, Notification

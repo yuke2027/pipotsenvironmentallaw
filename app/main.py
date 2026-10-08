@@ -1,4 +1,4 @@
-"""Default production entry; legacy factory remains in app.legacy_main."""
+"""Production entry. The application factory lives in app.v2.main."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

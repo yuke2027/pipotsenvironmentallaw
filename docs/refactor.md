@@ -1,6 +1,6 @@
 # 渐进式重构指南
 
-平台采用模块化单体和垂直业务切片。公开接口继续使用 `/api/v2`，现有 `v2_*` 表、数据和 legacy 算法保持兼容；新实现通过领域服务、仓储和适配器逐步接管旧入口。
+平台采用模块化单体和垂直业务切片。公开接口只使用 `/api/v2`。SQLite 旧应用、`/api/v1` 和 `legacy_algorithms` 已从运行树移除。
 
 ## 后端边界
 
@@ -10,9 +10,9 @@
 router -> application service -> repository / adapter -> database or external system
 ```
 
-路由负责参数校验、权限依赖和响应映射；服务层不依赖 FastAPI 或 ORM 实现；仓储负责持久化；legacy 代码只能通过适配器进入平台。共享事务、分页、错误、审计、权限上下文、存储和任务契约位于 `app/v2/shared`。
+路由负责参数校验、权限依赖和响应映射；服务层不依赖 FastAPI 或 ORM 实现；仓储负责持久化。共享事务、分页、HTTP 错误、日志脱敏、UTC 时间、审计、权限上下文、存储和任务契约位于 `app/v2/shared`。
 
-领域切片包括 `auth`、`monitoring`、`collection`、`enforcement`、`jobs`、`ml` 和 `admin`。`app/v2/models.py`、旧路由和旧任务模块保留为兼容门面，内部委托到新服务。
+领域切片包括 `auth`、`monitoring`、`collection`、`enforcement`、`jobs`、`ml` 和 `admin`。`app/v2/models.py` 保留为兼容门面，内部委托到领域服务。
 
 ## 任务和数据管道
 

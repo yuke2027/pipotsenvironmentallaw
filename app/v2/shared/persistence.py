@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from uuid import uuid4
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from app.db.types import UtcDateTime
+from app.v2.shared.utc_time import UtcDateTime
 
 
 def now() -> datetime:

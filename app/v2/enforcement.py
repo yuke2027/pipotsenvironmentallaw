@@ -8,7 +8,7 @@ from fastapi import Response
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.core.errors import ErrorCode
+from app.v2.shared.http_errors import ErrorCode
 from app.v2.auth import authorize, get_user
 from app.v2.common import MANAGERS, REGULATORS, fail
 from app.v2.domains.auth.models import User

@@ -22,3 +22,6 @@ var/config/
 *.db-journal
 var/models/
 var/exports/
+frontend/.proto-check/shots/
+frontend/.proto-check/node_modules
+frontend/.proto-check/*.png

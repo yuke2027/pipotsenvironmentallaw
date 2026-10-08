@@ -15,7 +15,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse, Response
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
-from .logging import sanitize_text, sanitize_value
+from app.v2.shared.sensitive_logging import sanitize_text, sanitize_value
 
 logger = logging.getLogger(__name__)
 

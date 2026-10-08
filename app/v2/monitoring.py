@@ -4,7 +4,7 @@ from datetime import date
 
 from fastapi import APIRouter, Depends, Query, Request
 
-from app.core.errors import ErrorCode
+from app.v2.shared.http_errors import ErrorCode
 from app.v2.auth import get_user
 from app.v2.common import UNITS, fail
 from app.v2.domains.auth.models import User

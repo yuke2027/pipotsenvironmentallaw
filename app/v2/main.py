@@ -10,8 +10,8 @@ from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from starlette.exceptions import HTTPException
 
-from app.core.errors import AppError, ErrorCode, app_error_handler, register_error_handlers
-from app.core.logging import install_sensitive_data_filter
+from app.v2.shared.http_errors import AppError, ErrorCode, app_error_handler, register_error_handlers
+from app.v2.shared.sensitive_logging import install_sensitive_data_filter
 from app.v2.config import Settings
 from app.v2.db import Database
 from app.v2.storage import FileStore

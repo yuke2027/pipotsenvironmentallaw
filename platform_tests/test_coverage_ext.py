@@ -15,7 +15,7 @@ from sqlalchemy.engine import make_url
 
 from app.v2.backup import archive_files, file_manifest
 from app.v2.collection import import_file, parse_wide
-from app.v2.common import UNITS
+from app.v2.common import UNITS, POLLUTANTS
 from app.v2.datasets import environment_manifest, scores, splits, train_scaler
 from app.v2.db import Database
 from app.v2.domains.admin.legacy_adapter import LegacyUserAdministrationAdapter
@@ -26,7 +26,8 @@ from app.v2.domains.jobs.models import Job, Outbox
 from app.v2.domains.monitoring.models import City, Observation, Station
 from app.v2.exports import export_job, import_enterprises, safe_cell
 from app.v2.imputation import fixed_mask, interpolate, windows
-from app.v2.jobs import enqueue
+from app.v2.jobs import enqueue, public_job
+from app.v2.domains.ml.models import ModelArtifact
 from app.v2.ml import model_job
 from app.v2.models import Audit, Base
 from app.v2.notifications import deliver_pending, validate_channel
@@ -1403,3 +1404,449 @@ class ModelInferBranchesTests(DatabaseTest):
         impute_job = self._job("impute", {"task": "imputation", "algorithm": "SAITS",
                                           "start": "2026-09-30", "end": "2026-09-30", "seed": 3})
         self.assertIn(run_job(impute_job, self.tiny)["status"], ("completed", "partial", "failed"))
+
+
+class ResidualBranchTests(DatabaseTest):
+    """Surgical coverage for the remaining worker/admin/monitoring/backup branches."""
+
+    def setUp(self):
+        super().setUp()
+        self.tiny = self.settings.model_copy(update={"model_window": 24, "model_epochs": 1})
+
+    def _job(self, kind, parameters):
+        with self.db.transaction() as session:
+            job = enqueue(session, kind, parameters, self.users["admin"])
+            return job.id
+
+    def _seed_days(self, days=17):
+        start = DAY - timedelta(days=days - 1)
+        for offset in range(days):
+            day = (start + timedelta(days=offset)).strftime("%Y%m%d")
+            import_file(self.db, self.store, daily_csv(day, kinds=PARTICULATE), "all")
+            import_file(self.db, self.store, daily_csv(day, kinds=GASES), "extra")
+        return start.strftime("%Y-%m-%d")
+
+    def test_worker_missing_dates_and_task_wrapper(self):
+        collect_id = self._job("collect", {})
+        evaluate_id = self._job("evaluate", {})
+        self.assertEqual(run_job(collect_id, self.tiny)["status"], "failed")
+        self.assertEqual(run_job(evaluate_id, self.tiny)["status"], "failed")
+        import app.v2.domains.jobs.worker as worker
+        ok_id = self._job("evaluate", {"start": "2026-09-30", "end": "2026-09-30"})
+        with patch.object(worker, "settings", self.tiny):
+            self.assertEqual(worker.execute_job(ok_id)["status"], "completed")
+
+    def test_worker_result_contract_and_failure_branches(self):
+        import app.v2.domains.jobs.worker as worker
+
+        def run_with(fake):
+            jid = self._job("evaluate", {"start": "2026-09-30", "end": "2026-09-30"})
+            with patch.object(worker, "dispatch", fake):
+                return jid, run_job(jid, self.tiny)
+
+        _, result = run_with(lambda *a: "not-a-dict")
+        self.assertEqual(result["status"], "failed")
+
+        jid, result = run_with(lambda *a: {"failures": [{"station": "x"}]})
+        with self.db.sessions() as session:
+            self.assertEqual(session.get(Job, jid).status, "partial")
+
+        def delete_mid_dispatch(db, store, cfg, job, progress):
+            with db.transaction() as session:
+                session.delete(session.get(Job, job.id))
+            return {}
+
+        jid, result = run_with(delete_mid_dispatch)
+        self.assertEqual(result["status"], "failed")
+
+        def boom(*a):
+            raise RuntimeError("unexpected internals")
+
+        jid, result = run_with(boom)
+        self.assertEqual(result["status"], "failed")
+        with self.db.sessions() as session:
+            error = session.get(Job, jid).error or ""
+            self.assertIn("请联系管理员", error)
+            self.assertNotIn("unexpected internals", error)
+
+    def test_worker_heartbeat_thread_and_duplicate_lock(self):
+        import threading
+
+        jid = self._job("evaluate", {"start": "2026-09-30", "end": "2026-09-30"})
+        original_wait = threading.Event.wait
+        calls = [0]
+
+        def fast_wait(event, timeout=None):
+            calls[0] += 1
+            return False if calls[0] <= 3 else original_wait(event, timeout)
+
+        with patch.object(threading.Event, "wait", fast_wait):
+            self.assertEqual(run_job(jid, self.tiny)["status"], "completed")
+        self.assertGreaterEqual(calls[0], 1)
+
+        other = self._job("evaluate", {"start": "2026-09-30", "end": "2026-09-30"})
+        with self.db.engine.connect() as holder:
+            holder.execute(text("SELECT pg_advisory_lock(hashtext(:k))"), {"k": f"job:{other}"})
+            self.assertEqual(run_job(other, self.tiny)["status"], "duplicate")
+
+    def test_brits_training_and_imputation_edges(self):
+        from app.v2 import imputation
+
+        times = __import__("pandas").date_range("2026-09-01", "2026-09-10", freq="h", tz="Asia/Shanghai")
+        data = np.full((1, len(times), len(POLLUTANTS)), np.nan, dtype=np.float32)
+        with self.assertRaises(ValueError):
+            imputation.train(data, times, ["s1"], "SAITS", 7, 24, self.tiny, self.store, lambda p: None)
+        short = __import__("pandas").date_range("2026-09-01", periods=30, freq="h", tz="Asia/Shanghai")
+        small = np.full((1, len(short), len(POLLUTANTS)), 10.0, dtype=np.float32)
+        with self.assertRaises(ValueError):
+            imputation.train(small, short, ["s1"], "SAITS", 7, 24, self.tiny, self.store, lambda p: None)
+
+        self.assertIsNotNone(imputation.construct("BRITS", 24, len(POLLUTANTS), self.tiny))
+
+        start = self._seed_days()
+        import_file(self.db, self.store, sparse_csv(kinds=PARTICULATE), "all")
+        import_file(self.db, self.store, sparse_csv(kinds=GASES), "extra")
+        job_id = self._job("train", {"task": "imputation", "algorithm": "BRITS",
+                                     "start": start, "end": "2026-09-30", "seed": 5})
+        self.assertEqual(run_job(job_id, self.tiny)["status"], "completed")
+        with self.db.transaction() as session:
+            artifact = session.scalars(select(ModelArtifact)).first()
+            artifact.status = "validated"
+            model_id = artifact.id
+        client = self.client("admin")
+        self.assertEqual(client.post(f"/api/v2/models/{model_id}/activate").status_code, 200)
+        impute_id = self._job("impute", {"task": "imputation", "algorithm": "BRITS",
+                                         "start": "2026-09-30", "end": "2026-09-30", "seed": 5})
+        self.assertIn(run_job(impute_id, self.tiny)["status"], ("completed", "partial"))
+
+    def test_license_confirmation_summary_branches(self):
+        from app.v2.shared.license import read_license_confirmation
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "lic"
+            self.assertEqual(read_license_confirmation(None)["reason"], "confirmation_file_not_configured")
+            self.assertEqual(read_license_confirmation(root)["reason"], "confirmation_file_missing")
+            root.mkdir(parents=True)
+            self.assertEqual(read_license_confirmation(root)["reason"], "confirmation_file_invalid")
+            bad = root / "bad.json"
+            bad.write_text("{oops", encoding="utf-8")
+            self.assertEqual(read_license_confirmation(bad)["reason"], "confirmation_file_invalid")
+            base = {"provider": "Quotsoft", "record_id": "r1", "confirmed_by": "qa",
+                    "scope": "continuous_business_use", "evidence_sha256": "ab" * 32,
+                    "reference": "ref-1"}
+            naive = root / "naive.json"
+            naive.write_text(json.dumps({**base, "confirmed_at": "2026-01-01T00:00:00"}), encoding="utf-8")
+            self.assertEqual(read_license_confirmation(naive)["reason"], "confirmed_at_requires_timezone")
+            future = root / "future.json"
+            future.write_text(json.dumps({**base, "confirmed_at": "2999-01-01T00:00:00+00:00"}), encoding="utf-8")
+            self.assertEqual(read_license_confirmation(future)["reason"], "confirmed_at_is_in_the_future")
+            good = root / "good.json"
+            good.write_text(json.dumps({**base, "confirmed_at": "2026-01-01T00:00:00+00:00"}), encoding="utf-8")
+            self.assertTrue(read_license_confirmation(good)["valid"])
+
+    def test_monitoring_filters_and_limit_guards(self):
+        Helpers.seeded(self.db, self.store)
+        researcher = self.client("researcher")
+        with self.db.sessions() as session:
+            station_id = session.scalar(select(Station.id))
+            city_id = session.scalar(select(City.id))
+        self.assertEqual(researcher.get(
+            f"/api/v2/observations?station_id={station_id}&city_id={city_id}"
+            "&pollutant=PM2.5&start=2026-09-30&end=2026-09-30").status_code, 200)
+        evaluate_id = self._job("evaluate", {"start": "2026-09-30", "end": "2026-09-30"})
+        run_job(evaluate_id, self.tiny)
+        resp = researcher.get(
+            f"/api/v2/evaluations?station_id={station_id}&city_id={city_id}"
+            "&pollutant=PM2.5&status=exceeded&start=2026-09-30&end=2026-09-30")
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(researcher.get(
+            "/api/v2/dashboard?start=2020-01-01&end=2026-01-01").status_code, 400)
+        too_many = researcher.get(
+            f"/api/v2/timeseries?start=2026-07-01&end=2026-09-30&station_ids="
+            f"{station_id},{station_id},{station_id},{station_id},{station_id}")
+        self.assertEqual(too_many.status_code, 422)
+        self.assertIn("查询结果过大", too_many.text)
+
+    def test_collection_parse_and_import_residual_edges(self):
+        with self.assertRaises(ValueError):
+            parse_wide(b"date,hour,type,\n20260930,0,PM2.5,10\n")
+        negative = b"date,hour,type,A,B\n20260930,0,PM2.5,-5,20\n"
+        _, _, _, invalid = parse_wide(negative)
+        self.assertEqual(invalid, 1)
+        with self.assertRaises(ValueError):
+            parse_wide(b"date,hour,type,B\n20260930,0,PM2.5,10\n20260929,0,PM2.5,10\n")
+        with self.assertRaises(ValueError):
+            parse_wide(b"date,hour,type,B\n")
+        with self.assertRaises(ValueError):
+            import_file(self.db, self.store, daily_csv(), "weird")
+        with self.assertRaises(ValueError):
+            import_file(self.db, self.store, daily_csv("20260930", kinds=PARTICULATE), "extra")
+        result = import_file(self.db, self.store, daily_csv("20260930", stations=("新建站点丙",)), "all")
+        self.assertGreater(result["inserted"], 0)
+        with self.db.sessions() as session:
+            self.assertIsNotNone(session.scalar(
+                select(Station).where(Station.name == "新建站点丙")))
+
+    def test_collect_range_size_limit_and_attempt(self):
+        from app.v2.domains.collection.repository import collect_range
+        small = self.tiny.model_copy(update={"max_upload_bytes": 1})
+
+        class FakeResponse:
+            content = b"date,hour,type,A\n2026-09-30,0,PM2.5,10\n"
+
+            def raise_for_status(self):
+                return None
+
+        class FakeClient:
+            def get(self, url):
+                return FakeResponse()
+
+        with self.db.transaction() as session:
+            job = enqueue(session, "collect", {})
+        result = collect_range(self.db, self.store, small, DAY, DAY, job.id, lambda p: None,
+                               client=FakeClient())
+        self.assertTrue(result["failures"])
+
+    def test_admin_notification_activation_rollback_and_write_guards(self):
+        client = self.client("admin")
+        with self.db.transaction() as session:
+            note = Notification(user_id=self.users["admin"], title="t", body="b", href="/", dedupe_key="k1")
+            session.add(note)
+            session.flush()
+            notification_id = note.id
+        self.assertEqual(client.post(f"/api/v2/notifications/{notification_id}/read").status_code, 200)
+
+        from app.v2.domains.ml.models import ModelArtifact
+
+        def make_model(tag):
+            ck, ck_hash = self.store.put(b"checkpoint-bytes", "checkpoints", ".bin")
+            payload = json.dumps({"algorithm": "seasonal", "tag": tag,
+                                  "checkpoint": {"storage_key": ck, "sha256": ck_hash}}).encode()
+            key, hashed = self.store.put(payload, "models", ".json")
+            with self.db.transaction() as session:
+                backing = enqueue(session, "train", {"task": "forecast", "algorithm": "seasonal"})
+                model = ModelArtifact(task="forecast", algorithm="seasonal", status="validated",
+                                      storage_key=key, sha256=hashed, manifest={}, metrics={},
+                                      job_id=backing.id)
+                session.add(model)
+                session.flush()
+                return model.id
+
+        first, second = make_model("a"), make_model("b")
+        self.assertEqual(client.post(f"/api/v2/models/{first}/activate").status_code, 200)
+        self.assertEqual(client.post(f"/api/v2/models/{second}/activate").status_code, 200)
+        self.assertEqual(client.post("/api/v2/models/forecast/rollback").status_code, 200)
+        self.assertEqual(client.post("/api/v2/models/imputation/rollback").status_code, 409)
+
+        with self.db.sessions() as session:
+            station_id = session.scalar(select(Station.id))
+        bad_alias = client.post(f"/api/v2/admin/stations/{station_id}/aliases", json={
+            "external_name": "旧称", "valid_from": "2026-06-01", "valid_to": "2026-05-01"})
+        self.assertEqual(bad_alias.status_code, 422)
+        bad_standard = client.post("/api/v2/admin/standards", json={
+            "pollutant": "O3", "basis": "daily", "region": "全国", "limit": 100, "unit": "μg/m³",
+            "effective_from": "2026-01-01"})
+        self.assertEqual(bad_standard.status_code, 422)
+        self_downgrade = client.patch(f"/api/v2/admin/users/{self.users['admin']}", json={
+            "role": "研究者", "active": True})
+        self.assertEqual(self_downgrade.status_code, 422)
+
+    def test_auth_session_and_csrf_edges(self):
+        client = self.client("researcher")
+        del client.headers["X-CSRF-Token"]
+        self.assertEqual(client.post("/api/v2/auth/logout").status_code, 403)
+        with self.db.transaction() as session:
+            session.execute(text("UPDATE v2_sessions SET expires_at = :past"),
+                            {"past": now() - timedelta(hours=1)})
+        self.assertEqual(client.get("/api/v2/auth/me").status_code, 401)
+        with self.db.transaction() as session:
+            user = session.get(User, self.users["researcher"])
+            user.active = False
+        self.assertEqual(client.get("/api/v2/auth/me").status_code, 401)
+
+    def test_jobs_validation_conflicts_and_public_facade(self):
+        admin = self.client("admin")
+        researcher = self.client("researcher")
+        mismatch = admin.post("/api/v2/jobs", json={
+            "kind": "train", "task": "forecast", "algorithm": "SAITS",
+            "start": "2026-09-01", "end": "2026-09-30"})
+        self.assertEqual(mismatch.status_code, 422)
+        bad_station = admin.post("/api/v2/jobs", json={
+            "kind": "collect", "start": "2026-09-30", "end": "2026-09-30",
+            "station_id": "nonexistent"})
+        self.assertEqual(bad_station.status_code, 404)
+
+        failed = self._job("evaluate", {"start": "2026-09-30", "end": "2026-09-30"})
+        with patch("app.v2.domains.jobs.worker.dispatch",
+                   lambda *a: (_ for _ in ()).throw(ValueError("x"))):
+            run_job(failed, self.tiny)
+        self.assertEqual(researcher.post(f"/api/v2/jobs/{failed}/retry").status_code, 404)
+        with self.db.transaction() as session:
+            job = session.get(Job, failed)
+            job.owner_id = self.users["researcher"]
+            job.kind = "collect"
+        self.assertEqual(researcher.post(f"/api/v2/jobs/{failed}/retry").status_code, 403)
+
+        done = self._job("evaluate", {"start": "2026-09-30", "end": "2026-09-30"})
+        run_job(done, self.tiny)
+        self.assertEqual(admin.post(f"/api/v2/jobs/{done}/cancel").status_code, 409)
+        self.assertEqual(admin.post(f"/api/v2/jobs/{done}/retry").status_code, 409)
+        self.assertEqual(admin.get("/api/v2/jobs?status=succeeded").status_code, 200)
+
+        with self.db.sessions() as session:
+            public = public_job(session.get(Job, done))
+        self.assertIn("download_available", public)
+
+        with self.assertRaises(ValueError):
+            import_enterprises(
+                self.db,
+                "企业名称,统一社会信用代码,行业,地址,联系人\n坏行,wrong,工,京,人\n".encode(),
+                self.users["admin"])
+
+    def test_main_lifespan_health_and_error_handlers(self):
+        from fastapi.testclient import TestClient
+        from app.v2.main import create_app
+
+        with self.db.engine.connect() as connection:
+            connection.execute(text(
+                "CREATE TABLE IF NOT EXISTS v2_alembic_version(version_num varchar(32) NOT NULL)"))
+            connection.commit()
+        with TestClient(create_app(self.settings)) as client:
+            self.assertEqual(client.get("/health/live").json()["status"], "ok")
+            self.assertEqual(client.get("/health/ready").status_code, 200)
+            missing = client.get("/api/v2/does-not-exist")
+            self.assertEqual(missing.status_code, 404)
+            self.assertIn("接口不存在", missing.text)
+
+    def test_scheduler_stalled_recovery_and_lock_failure(self):
+        import os
+        import app.v2.domains.jobs.scheduler_worker as scheduler_worker
+
+        with self.db.transaction() as session:
+            job = enqueue(session, "evaluate", {"start": "2026-09-30", "end": "2026-09-30"})
+            message = session.scalar(select(Outbox).where(Outbox.job_id == job.id))
+            message.sent_at = now() - timedelta(minutes=30)
+            job.status = "running"
+            job.heartbeat_at = now() - timedelta(minutes=30)
+        recover_stalled(self.db)
+        with self.db.sessions() as session:
+            self.assertIsNone(session.scalar(select(Outbox.sent_at)))
+
+        development = self.settings.model_copy(update={"environment": "development"})
+        schedule_daily(self.db, development, local_now=datetime(2026, 9, 30, 6, 0, tzinfo=LOCAL))
+
+        with self.db.engine.connect() as holder:
+            holder.execute(text(
+                "SELECT pg_advisory_lock(hashtext('platform-scheduler:' || current_schema()))"))
+            environment = {
+                "ESP_DATABASE_URL": self.settings.database_url,
+                "ESP_SECRET_KEY": "x" * 40,
+                "ESP_STORAGE_ROOT": str(self.store.root),
+                "ESP_ENVIRONMENT": "test",
+            }
+            with patch.dict(os.environ, environment):
+                with self.assertRaises(RuntimeError):
+                    scheduler_worker.main()
+
+    def test_scheduler_tick_exception_branch(self):
+        import os
+        import signal
+        import threading
+        import app.v2.domains.jobs.scheduler_worker as scheduler_worker
+
+        with self.db.transaction() as session:
+            enqueue(session, "evaluate", {"start": "2026-09-30", "end": "2026-09-30"})
+        environment = {
+            "ESP_DATABASE_URL": self.settings.database_url,
+            "ESP_SECRET_KEY": "x" * 40,
+            "ESP_STORAGE_ROOT": str(self.store.root),
+            "ESP_ENVIRONMENT": "test",
+        }
+
+        def killer():
+            threading.Event().wait(0.8)
+            os.kill(os.getpid(), signal.SIGTERM)
+
+        def broken(*a, **k):
+            raise RuntimeError("simulated tick failure")
+
+        with patch.dict(os.environ, environment), \
+                patch("app.v2.domains.admin.notification_worker.deliver_pending", broken):
+            thread = threading.Thread(target=killer, daemon=True)
+            thread.start()
+            scheduler_worker.main()
+            thread.join(timeout=5)
+
+    def test_evaluation_subindex_and_legacy_filtered_edges(self):
+        from app.v2.domains.monitoring.evaluation_repository import subindex
+        from app.v2.domains.monitoring.legacy import filtered
+        from app.v2.shared.http_errors import AppError
+
+        self.assertIsNotNone(subindex("PM10", 150, DAY))
+        self.assertIsNotNone(subindex("PM2.5", 9999, DAY))
+        self.assertIsNone(subindex("O3", 900, date(2026, 2, 1)))
+        with self.assertRaises(AppError):
+            filtered(DAY, DAY - timedelta(days=1))
+        statement = filtered(DAY - timedelta(days=1), DAY, station_id="s1",
+                             pollutant="AQI", city_id="c1")
+        self.assertIsNotNone(statement)
+
+    def test_domain_facades_and_dataset_guards(self):
+        import app.v2.domains.ml as ml_domain
+        import app.v2.domains.admin as admin_domain
+        import app.v2.domains.auth as auth_domain
+        import app.v2.domains.enforcement as enforcement_domain
+        import app.v2.domains.monitoring as monitoring_domain
+
+        for module in (ml_domain, admin_domain, auth_domain, enforcement_domain, monitoring_domain):
+            with self.assertRaises(AttributeError):
+                getattr(module, "no_such_attribute")
+        self.assertTrue(callable(ml_domain.model_job))
+        for module in (admin_domain, auth_domain, enforcement_domain, monitoring_domain):
+            self.assertTrue(hasattr(module, "router"))
+
+        with self.assertRaises(ValueError):
+            splits(10, 24)
+        with self.assertRaises(ValueError):
+            scores(np.array([np.nan, np.nan]), np.array([np.nan, np.nan]))
+        with patch("importlib.metadata.version",
+                   side_effect=__import__("importlib").metadata.PackageNotFoundError):
+            manifest = environment_manifest()
+        self.assertIn("python", manifest)
+
+        from app.v2 import forecasting
+        times = __import__("pandas").date_range("2026-09-01", "2026-09-20", freq="h", tz="Asia/Shanghai")
+        data = np.full((1, len(times), len(POLLUTANTS)), np.nan, dtype=np.float32)
+        with self.assertRaises((ValueError, KeyError)):
+            forecasting.train(data, times, ["s1"], "lightgbm", 7, 24, lambda p: None)
+
+    def test_storage_edges_and_backup_reference_walk(self):
+        from app.v2.shared.backup_repository import referenced_payload_files, file_manifest
+        from app.v2.domains.ml.models import ModelArtifact
+
+        self.assertEqual(referenced_payload_files(None), {})
+        self.assertEqual(referenced_payload_files({"storage_key": "k", "sha256": "h"}), {"k": "h"})
+        with self.assertRaises(Exception):
+            self.store.path("../escape")
+        with self.assertRaises(ValueError):
+            self.store._write(self.store.path("tmp/mismatch"), "0" * 64, iter([b"data"]))
+        nested = self.store.root / "deep" / "nested" / "dir"
+        nested.mkdir(parents=True)
+        self.store._sync_directories(nested)
+
+        ck, ck_hash = self.store.put(b"ck", "checkpoints", ".bin")
+        snap, snap_hash = self.store.put(b"snap", "snapshots", ".csv")
+        artifact_key, artifact_hash = self.store.put(
+            json.dumps({"checkpoint": {"storage_key": ck, "sha256": ck_hash}}).encode(),
+            "models", ".json")
+        with self.db.transaction() as session:
+            backing = enqueue(session, "train", {"task": "forecast", "algorithm": "seasonal"})
+            model = ModelArtifact(task="forecast", algorithm="seasonal", status="validated",
+                                  storage_key=artifact_key, sha256=artifact_hash,
+                                  manifest={"snapshot": {"storage_key": snap, "sha256": snap_hash}},
+                                  metrics={}, job_id=backing.id)
+            session.add(model)
+        manifest = file_manifest(self.db, self.store)
+        self.assertIn(snap, manifest)

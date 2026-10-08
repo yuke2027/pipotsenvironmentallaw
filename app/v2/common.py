@@ -5,8 +5,8 @@ from sqlalchemy import Select, func, select
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import Session
 
-from app.core.errors import AppError, ErrorCode, get_request_id
-from app.core.logging import sanitize_value
+from app.v2.shared.http_errors import AppError, ErrorCode, get_request_id
+from app.v2.shared.sensitive_logging import sanitize_value
 from app.v2.domains.auth.models import Audit
 
 ROLES = ("管理员", "监管主管", "执法人员", "研究者")
