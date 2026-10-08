@@ -6,6 +6,7 @@
   "engines": {"node": ">=24 <25"},
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "prototype": "vite --open /prototype/",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "generate:api": "openapi-typescript openapi.json -o src/generated/api.d.ts",
