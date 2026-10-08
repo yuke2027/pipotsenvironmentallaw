@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, Navigate, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { App, Avatar, Badge, Button, DatePicker, Drawer, Dropdown, Empty, Layout, Menu, Progress, Select, Space, Tag } from 'antd';
+import { App, Avatar, Badge, Button, DatePicker, Drawer, Dropdown, Empty, Layout, Menu, Progress, Select, Space, Tag, Watermark } from 'antd';
 import { ApartmentOutlined, AuditOutlined, BarChartOutlined, BellOutlined, CloudOutlined, DashboardOutlined, DatabaseOutlined, DownloadOutlined, ExperimentOutlined, FileSearchOutlined, LogoutOutlined, MenuOutlined, SafetyCertificateOutlined, SettingOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { dateTime } from './api';
@@ -73,6 +73,7 @@ export function Shell() {
     </Layout></Layout>
     <Drawer title="通知中心" open={notice} onClose={() => showNotice(false)}><QueryState query={notifications}>{notifications.data?.items.length ? notifications.data.items.map(n => <button className="notification-row" key={n.id} onClick={async () => { await markNotificationRead.mutateAsync({ id: n.id }); client.invalidateQueries({ queryKey: ['api'] }); navigate(link(n.href)); showNotice(false); }}><strong>{!n.read_at && <span className="live-dot" />}{n.title}</strong><p>{n.body}</p><small>{dateTime(n.created_at)}</small></button>) : <Empty description="暂无通知" />}</QueryState></Drawer>
     <JobDrawer id={jobId} onClose={() => setJobId('')} />
+    <Watermark content={`${user.display_name} ${user.username} ${dayjs().format('YYYY-MM-DD')}`} />
   </WorkbenchContext.Provider>;
 }
 

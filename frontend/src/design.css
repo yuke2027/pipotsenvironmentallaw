@@ -1,0 +1,104 @@
+/* 蓝穹云眼 · 设计系统增量样式（新组件；与 tokens.ts 语义一致）。 */
+
+/* ---------- AQI 徽标与图例 ---------- */
+.aqi-badge { display: inline-flex; align-items: center; gap: 5px; border-radius: 6px; font-weight: 600; line-height: 1; }
+.aqi-badge em { font-style: normal; font-weight: 700; }
+.aqi-sm { padding: 2px 6px; font-size: 11px; }
+.aqi-md { padding: 4px 9px; font-size: 13px; }
+.aqi-lg { padding: 8px 14px; font-size: 15px; border-radius: 8px; }
+.aqi-lg b { font-family: Bahnschrift, "DIN Alternate", sans-serif; font-size: 26px; }
+.aqi-badge b { font-family: Bahnschrift, "DIN Alternate", sans-serif; }
+.aqi-legend { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: #5b6f7a; }
+.aqi-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 4px; }
+.aqi-legend.is-dark { color: #9fb6c0; }
+
+/* ---------- 数据新鲜度 ---------- */
+.freshness { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 16px; margin-bottom: 16px;
+  background: #fff; border: 1px solid #dce5e9; border-left: 3px solid #388469; border-radius: 8px; font-size: 13px; color: #5b6f7a; }
+.freshness.is-stale { border-left-color: #bd861b; background: #fdf9ef; }
+.freshness .sep { color: #c9d5da; }
+.freshness-mode { margin-left: auto; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.dot.live { background: #388469; box-shadow: 0 0 0 4px #38846922; }
+.dot.warn { background: #bd861b; box-shadow: 0 0 0 4px #bd861b22; }
+
+/* ---------- 指标卡 v2 ---------- */
+.metric-card-v2 { position: relative; padding: 16px 18px 14px; border-top: 3px solid transparent; }
+.metric-card-v2.tone-warn { border-top-color: #bd861b; }
+.metric-card-v2.tone-danger { border-top-color: #c75849; }
+.metric-card-v2 .metric-foot { display: flex; align-items: center; gap: 10px; min-height: 22px; margin-top: 6px; font-size: 12px; }
+.metric-card-v2 .delta { font-family: Bahnschrift, "DIN Alternate", sans-serif; }
+.metric-card-v2 .delta.good { color: #388469; }
+.metric-card-v2 .delta.bad { color: #c75849; }
+.metric-card-v2 .muted { color: #8a9ba4; }
+.metric-card-v2 .spark { position: absolute; right: 14px; top: 16px; width: 88px; height: 30px; opacity: .85; }
+.metric-card-v2 .metric-value { font-family: Bahnschrift, "DIN Alternate", "Segoe UI", sans-serif; font-size: 30px; line-height: 1.2; }
+
+/* ---------- 期限条 ---------- */
+.deadline { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.deadline-track { flex: 1; height: 5px; border-radius: 3px; background: #edf2f4; overflow: hidden; }
+.deadline-track > div { height: 100%; border-radius: 3px; background: #087f8c; }
+.deadline.near .deadline-track > div { background: #bd861b; }
+.deadline.over .deadline-track > div { background: #c75849; }
+.deadline > span { white-space: nowrap; color: #5b6f7a; min-width: 56px; text-align: right; }
+.deadline.near > span { color: #bd861b; font-weight: 600; }
+.deadline.over > span { color: #c75849; font-weight: 600; }
+.deadline.compact { min-width: 110px; }
+
+/* ---------- 站点地图 ---------- */
+.station-map { position: relative; border-radius: 8px; background: linear-gradient(180deg, #f7fafb, #eef4f6); overflow: hidden; }
+.station-map.is-dark { background: #08202e; }
+.map-basemap-note { position: absolute; left: 10px; bottom: 8px; font-size: 11px; color: #8a9ba4; pointer-events: none; }
+.station-map.is-dark .map-basemap-note { color: #5f7a86; }
+
+/* ---------- 日历热力图 ---------- */
+.cal-heatmap { width: 100%; }
+
+/* ---------- 可信度图例 ---------- */
+.trust-legend { display: flex; gap: 12px; font-size: 12px; color: #5b6f7a; }
+.trust-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 4px; }
+.trust-legend .trust-missing i { border-radius: 0; transform: rotate(45deg) scale(.8); }
+.trust-legend .trust-imputed i { transform: rotate(45deg) scale(.85); }
+
+/* ---------- 排行条 ---------- */
+.rank-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.rank-list li { display: grid; grid-template-columns: 26px minmax(120px, 170px) 1fr 56px; align-items: center; gap: 10px; font-size: 13px; }
+.rank-no { width: 20px; height: 20px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
+  background: #edf2f4; color: #5b6f7a; font-size: 11px; font-weight: 600; }
+.rank-no.top { background: #087f8c; color: #fff; }
+.rank-name { color: #20343f; font-weight: 500; display: flex; flex-direction: column; line-height: 1.25; }
+.rank-name small { color: #8a9ba4; font-weight: 400; }
+.rank-bar { height: 8px; border-radius: 4px; background: #edf2f4; overflow: hidden; }
+.rank-bar > div { height: 100%; border-radius: 4px; }
+.rank-list b.is-over { color: #c75849; }
+.rank-list b { font-family: Bahnschrift, "DIN Alternate", sans-serif; text-align: right; }
+
+/* ---------- 任务行（期限条版） ---------- */
+.task-row-v2 { display: grid; grid-template-columns: 1fr 170px 60px; align-items: center; gap: 14px; padding: 12px 14px;
+  border: 1px solid #edf2f4; border-radius: 8px; margin-bottom: 10px; color: inherit; }
+.task-row-v2:hover { border-color: #087f8c; background: #f7fafb; }
+.task-row-v2 .task-title { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.task-row-v2 small { color: #8a9ba4; }
+.task-row-v2 .task-go { color: #087f8c; font-size: 12px; white-space: nowrap; }
+
+/* ---------- 工作台布局 ---------- */
+.ws-metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 16px; }
+.ws-metrics-4 { grid-template-columns: repeat(4, 1fr); }
+.ws-grid-main { display: grid; grid-template-columns: 1.65fr 1fr; gap: 16px; margin-bottom: 16px; }
+.ws-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+/* ---------- 水印 ---------- */
+.watermark { position: fixed; inset: 0; z-index: 999; pointer-events: none; }
+
+/* ---------- 小节标题 ---------- */
+.section-title { display: flex; justify-content: space-between; align-items: baseline; margin: 4px 0 10px; }
+.section-title h3 { margin: 0; font-size: 14px; font-weight: 600; color: #20343f; }
+
+@media (max-width: 1280px) {
+  .ws-metrics { grid-template-columns: repeat(3, 1fr); }
+  .ws-grid-main { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .ws-metrics { grid-template-columns: repeat(2, 1fr); }
+  .ws-grid-2 { grid-template-columns: 1fr; }
+}
