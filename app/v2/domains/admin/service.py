@@ -68,7 +68,7 @@ class AdminReadPort(Protocol):
 
     def notifications(self, user_id: str) -> dict[str, Any]: ...
 
-    def sources(self, license_confirmed: bool) -> dict[str, Any]: ...
+    def sources(self, license_summary: dict[str, Any]) -> dict[str, Any]: ...
 
     def models(self) -> dict[str, Any]: ...
 
@@ -88,8 +88,8 @@ class AdminReadService:
     def list_notifications(self, user_id: str) -> dict[str, Any]:
         return self.port.notifications(user_id)
 
-    def list_sources(self, license_confirmed: bool) -> dict[str, Any]:
-        return self.port.sources(license_confirmed)
+    def list_sources(self, license_summary: dict[str, Any]) -> dict[str, Any]:
+        return self.port.sources(license_summary)
 
     def list_models(self) -> dict[str, Any]:
         return self.port.models()

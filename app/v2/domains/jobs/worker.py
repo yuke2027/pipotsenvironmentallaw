@@ -44,23 +44,26 @@ def dispatch(db: Database, store: FileStore, configuration: Settings, job: Job, 
     p = job.parameters
     start = date.fromisoformat(p["start"]) if "start" in p else None
     end = date.fromisoformat(p["end"]) if "end" in p else None
+    source_key = getattr(configuration, "source_provider", "quotsoft")
     if job.kind == "collect":
-        from app.v2.domains.collection.adapters import LegacyCollectionAdapter
+        from app.v2.domains.collection.adapters import resolve_adapter
         from app.v2.domains.collection.service import CollectionService
         from app.v2.evaluation import evaluate_range
         if start is None or end is None:
             raise ValueError("采集任务缺少日期范围")
-        result = CollectionService(LegacyCollectionAdapter(db, store, configuration)).collect(start, end, job.id, progress)
+        adapter = resolve_adapter(source_key, db, store, configuration)
+        result = CollectionService(adapter).collect(start, end, job.id, progress)
         result["evaluation"] = evaluate_range(db, start, end, job.id, lambda _: None)
         return result
     if job.kind == "import":
-        from app.v2.domains.collection.adapters import LegacyCollectionAdapter
+        from app.v2.domains.collection.adapters import resolve_adapter
         from app.v2.domains.collection.service import CollectionService
         from app.v2.exports import import_enterprises
         from app.v2.evaluation import evaluate_range
         content = store.verify(p["storage_key"], p["sha256"]).read_bytes()
         if p["kind"] == "enterprises": return import_enterprises(db, content, job.owner_id)
-        result = CollectionService(LegacyCollectionAdapter(db, store, configuration)).import_file(content, p["kind"])
+        adapter = resolve_adapter(source_key, db, store, configuration)
+        result = CollectionService(adapter).import_file(content, p["kind"])
         day = date.fromisoformat(result["date"])
         result["evaluation"] = evaluate_range(db, day, day, job.id, progress)
         return result

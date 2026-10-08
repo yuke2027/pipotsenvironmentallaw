@@ -603,7 +603,7 @@ def test_admin_read_service_forwards_catalog_and_user_context() -> None:
         def standards(self): return {"kind": "standards"}
         def laws(self): return {"kind": "laws"}
         def notifications(self, user_id): return {"user_id": user_id}
-        def sources(self, license_confirmed): return {"license_confirmed": license_confirmed}
+        def sources(self, license_summary): return {"license_confirmed": license_summary["ready"]}
         def models(self): return {"kind": "models"}
         def channels(self): return {"kind": "channels"}
 
@@ -611,7 +611,7 @@ def test_admin_read_service_forwards_catalog_and_user_context() -> None:
     assert service.list_standards()["kind"] == "standards"
     assert service.list_laws()["kind"] == "laws"
     assert service.list_notifications("user-1")["user_id"] == "user-1"
-    assert service.list_sources(True)["license_confirmed"] is True
+    assert service.list_sources({"ready": True})["license_confirmed"] is True
     assert service.list_models()["kind"] == "models"
     assert service.list_channels()["kind"] == "channels"
 

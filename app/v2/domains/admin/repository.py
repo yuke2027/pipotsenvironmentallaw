@@ -70,10 +70,12 @@ class SqlAlchemyAdminReadPort:
         statement = select(Notification).where(Notification.user_id == user_id).order_by(Notification.created_at.desc())
         return page(self.session, statement, 1, 100)
 
-    def sources(self, license_confirmed: bool) -> dict[str, Any]:
+    def sources(self, license_summary: dict[str, Any]) -> dict[str, Any]:
         files = page(self.session, select(SourceFile).order_by(SourceFile.created_at.desc()), 1, 100)
         return {"provider": "Quotsoft", "url": "https://quotsoft.net/air/", "schedule": "每日 03:30 Asia/Shanghai；重查最近七天",
-                "license_confirmed": license_confirmed, "files": files,
+                "license_confirmed": bool(license_summary.get("ready")), "license_state": license_summary.get("state"),
+                "license_scope": license_summary.get("scope"), "license_valid_until": license_summary.get("valid_until"),
+                "source_adapter": license_summary.get("source_provider"), "files": files,
                 "observation_rule": "小时值与滚动均值分别存储；原始文件及修订不可覆盖"}
 
     def models(self) -> dict[str, Any]:

@@ -112,7 +112,7 @@ def audits(request: Request, page_number: int = Query(1, ge=1), user: User = Dep
 @router.get("/admin/sources")
 def sources(request: Request, user: User = Depends(authorize("管理员"))) -> dict[str, Any]:
     with request.app.state.db.sessions() as session:
-        return _admin_reads(request, session).list_sources(request.app.state.settings.source_license_ready())
+        return _admin_reads(request, session).list_sources(request.app.state.settings.source_license_summary())
 
 
 @router.get("/models", response_model=Page[ModelView])

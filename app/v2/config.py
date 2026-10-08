@@ -3,7 +3,7 @@ from pathlib import Path
 from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from app.v2.shared.license import read_license_confirmation
+from app.v2.shared.license import license_state
 
 
 class Settings(BaseSettings):
@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     admin_read_service_enabled: bool = True
     ml_service_enabled: bool = True
     max_upload_bytes: int = 50 * 1024 * 1024
+    source_provider: str = "quotsoft"
     source_base_url: str = "https://quotsoft.net/air/data"
     source_interval_seconds: float = 1.0
     source_timeout_seconds: float = 30
@@ -53,7 +54,9 @@ class Settings(BaseSettings):
             (self.storage_root / name).mkdir(parents=True, exist_ok=True)
 
     def source_license_ready(self) -> bool:
-        """Require both the deployment switch and an auditable confirmation."""
-        return self.source_license_confirmed and read_license_confirmation(
-            self.source_license_confirmation_file
-        ).get("valid", False)
+        """Require the deployment switch, auditable confirmation and provider match."""
+        return bool(license_state(self)["ready"])
+
+    def source_license_summary(self) -> dict[str, object]:
+        """Expose the gate decision for admin/ops surfaces."""
+        return license_state(self)

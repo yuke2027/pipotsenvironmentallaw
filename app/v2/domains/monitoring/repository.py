@@ -3,7 +3,7 @@
 from typing import Any
 
 from sqlalchemy.orm import Session
-from sqlalchemy import cast, func, or_, select
+from sqlalchemy import and_, cast, func, or_, select
 from sqlalchemy.dialects.postgresql import JSONB
 
 from app.v2.common import UNITS, page, serialize
@@ -263,13 +263,37 @@ class SqlAlchemyMonitoringReadPort:
                 cast(Inspection.collaborators, JSONB).contains([filters.enforcement_user_id]),
             ))
         pending = self.session.scalar(inspection_statement) if filters.include_pending else None
+        latest_aqi = (select(AQIResult.station_id, func.max(AQIResult.local_date).label("d"))
+                      .where(AQIResult.is_current.is_(True)).group_by(AQIResult.station_id).subquery())
+        snapshot_rows = self.session.execute(
+            select(Station.id, Station.name, Station.latitude, Station.longitude,
+                   AQIResult.value, AQIResult.local_date, AQIResult.components, AQIResult.complete)
+            .select_from(AQIResult)
+            .join(latest_aqi, and_(AQIResult.station_id == latest_aqi.c.station_id,
+                                   AQIResult.local_date == latest_aqi.c.d))
+            .join(Station, Station.id == AQIResult.station_id)
+            .where(Station.active.is_(True), AQIResult.is_current.is_(True),
+                   *([] if not filters.city_id else [Station.city_id == filters.city_id]))).all()
+        station_snapshot: dict[Any, dict[str, Any]] = {}
+        for sid, name, lat, lon, value, observed_date, components, complete in snapshot_rows:
+            parts = components if isinstance(components, dict) else {}
+            primary = max((p for p, c in parts.items() if isinstance(c, dict) and c.get("iaqi") is not None),
+                          key=lambda p: parts[p]["iaqi"], default=None)
+            station_snapshot.setdefault(sid, {
+                "station_id": sid, "name": name, "latitude": lat, "longitude": lon,
+                "aqi": value, "local_date": str(observed_date) if observed_date else None,
+                "primary": primary, "complete": bool(complete)})
+        attribution = self.session.scalar(
+            select(SourceFile.attribution).where(SourceFile.is_current.is_(True))
+            .order_by(SourceFile.created_at.desc()).limit(1))
         return {
             "latest_date": latest, "updated_at": updated_at,
             "start": selected_start, "end": selected_end,
             "stations": self.session.scalar(select(func.count()).select_from(Station).where(*station_filter)),
             "pollutants": [dict(row) for row in summary], "evaluations": evaluation_counts,
             "pending_inspections": pending,
-            "attribution": "Quotsoft / 北京市生态环境监测中心",
+            "station_snapshot": list(station_snapshot.values()),
+            "attribution": attribution or "北京市生态环境监测中心（来源待接入）",
             "source_url": "https://quotsoft.net/air/", "frequency": "每日更新",
             "stale": latest is None or (datetime.now(LOCAL).date() - latest).days > 2,
         }
