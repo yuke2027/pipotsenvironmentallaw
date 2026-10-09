@@ -187,4 +187,115 @@
   <div class="note">ESP_SOURCE_LICENSE_CONFIRMED 为部署总开关；门禁在适配器 collect() 内执行，调度、手工任务、CLI 三条入口同一规则。</div>
 </div>
 
+<!-- 图6 核心实体关系 -->
+<div class="figure" id="fig-er" style="width:1100px">
+  <div class="fig-title"><span>图</span>核心实体关系</div>
+  <div class="grid2">
+    <div class="col">
+      <div class="colhead">监测与评价链</div>
+      <div class="layer-boxes" style="flex-direction:column;align-items:stretch;gap:8px">
+        <div class="box">v2_cities / v2_stations<small>城市与站点目录 · 坐标 · 启停状态</small></div>
+        <div class="arrow">▼ 1:N</div>
+        <div class="box">v2_station_aliases<small>来源文件名称 → 目录站点 · 有效期别名</small></div>
+        <div class="box">v2_source_files<small>原始来源文件 · SHA-256 · is_current 修订链</small></div>
+        <div class="arrow">▼ 1:N</div>
+        <div class="box">v2_observations<small>小时值 / 滚动均值 · UTC · 绑定来源文件</small></div>
+        <div class="arrow">▼ 评价引擎</div>
+        <div class="box">v2_evaluations / v2_aqi_results<small>标准快照 · 超标倍数 · 完整性 · 快照哈希</small></div>
+        <div class="box sink">v2_derived_values<small>插补 / 预测 · 独立存储不覆盖证据</small></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="colhead">执法与支撑链</div>
+      <div class="layer-boxes" style="flex-direction:column;align-items:stretch;gap:8px">
+        <div class="box">v2_leads<small>线索 · 认领 / 分派 / 驳回</small></div>
+        <div class="arrow">▼ 1:1 分派</div>
+        <div class="box brand">v2_inspections<small>核查任务 · 状态机 · version 乐观锁</small></div>
+        <div class="arrow">▼ 1:N</div>
+        <div class="box">v2_rectifications / v2_attachments / v2_workflow_events<small>整改事项 · 证据附件 · 流转留痕</small></div>
+        <div class="box">v2_enterprises / v2_enterprise_records<small>企业档案 · 排放口 / 许可证</small></div>
+        <div class="box dark">v2_users / v2_sessions / v2_audits<small>账号角色 · 会话 · 不可变审计</small></div>
+        <div class="box dark">v2_jobs / v2_outbox<small>异步任务 · 事务发件箱 · 心跳重试</small></div>
+        <div class="box">v2_standards / v2_laws / v2_models / v2_model_activations / v2_notifications / v2_channels / v2_deliveries / v2_source_attempts<small>标准 · 法规 · 模型与激活 · 通知与通道 · 采集尝试</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="note">观测永远指向来源文件；核查由线索分派产生并反向引用企业；所有写操作落到 v2_audits；任务通过 v2_outbox 与同事务一起提交。</div>
+</div>
+
+<!-- 图7 登录与鉴权时序 -->
+<div class="figure" id="fig-auth" style="width:1060px">
+  <div class="fig-title"><span>图</span>登录与会话鉴权时序</div>
+  <div class="wrow">
+    <div class="box" style="min-width:96px">浏览器</div>
+    <div class="harrow">① POST /auth/login ─▶</div>
+    <div class="box brand" style="min-width:150px">api · auth 域<small>Argon2 校验 · 失败计数锁定</small></div>
+    <div class="harrow">─▶</div>
+    <div class="box" style="min-width:130px">v2_sessions<small>服务端会话 · 可吊销</small></div>
+  </div>
+  <div class="wrow">
+    <div class="box" style="min-width:96px"></div>
+    <div class="harrow" style="font-size:12px">② Set-Cookie: esp_session（HttpOnly）+ esp_csrf 令牌 ◀─</div>
+    <div class="box" style="min-width:150px"></div>
+    <div class="box" style="min-width:130px"></div>
+  </div>
+  <div class="wrow">
+    <div class="box" style="min-width:96px">后续请求</div>
+    <div class="harrow">③ Cookie + X-CSRF-Token + Origin ─▶</div>
+    <div class="decision" style="min-width:150px">三重校验<br><small>会话有效 · CSRF 匹配 · Origin 白名单</small></div>
+    <div class="harrow">─▶</div>
+    <div class="box" style="min-width:130px">authorize(角色)<small>接口级角色检查</small></div>
+  </div>
+  <div class="vsep"></div>
+  <div class="grid2">
+    <div class="col">
+      <div class="colhead">拒绝路径</div>
+      <div class="layer-boxes" style="flex-direction:column;align-items:stretch;gap:8px">
+        <div class="box">401 未认证 / 403 越权<small>拒绝事件独立提交审计</small></div>
+        <div class="box">首次登录 must_change_password<small>强制跳转修改密码页</small></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="colhead">会话失效</div>
+      <div class="layer-boxes" style="flex-direction:column;align-items:stretch;gap:8px">
+        <div class="box">退出登录 / 改密 / 改角色 / 停用<small>服务端吊销全部会话</small></div>
+        <div class="box">失败登录计数超限<small>锁定至 locked_until</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="note">浏览器 Cookie 为 HttpOnly；CSRF 同时验证令牌与 Origin；越权拒绝写入审计且不被业务回滚撤销。</div>
+</div>
+
+<!-- 图8 任务生命周期 -->
+<div class="figure" id="fig-job" style="width:1080px">
+  <div class="fig-title"><span>图</span>异步任务生命周期</div>
+  <div class="wrow">
+    <div class="box">POST /jobs /imports<small>或调度器触发</small></div>
+    <div class="harrow">─▶</div>
+    <div class="decision">目标指纹 + PG 事务锁去重<br><small>重复提交返回已存在任务</small></div>
+    <div class="harrow">─▶</div>
+    <div class="box">v2_jobs + v2_outbox<small>任务与发件箱同一事务提交</small></div>
+    <div class="harrow">─▶</div>
+    <div class="state">queued</div>
+  </div>
+  <div class="wrow">
+    <div class="wtag" style="width:210px"></div>
+    <div class="harrow">─▶</div>
+    <div class="box dark">Celery Worker<small>acks_late · 会话锁跨事务 · 心跳</small></div>
+    <div class="harrow">─▶</div>
+    <div class="state">running<small style="font-size:10.5px">progress 回写</small></div>
+    <div class="harrow">─▶</div>
+    <div class="state">succeeded / partial / failed</div>
+  </div>
+  <div class="wrow" style="margin-left:250px">
+    <div class="wtag" style="text-align:right;width:96px">失败 / 部分</div>
+    <div class="harrow">─重试▶</div>
+    <div class="state">重新排队（attempts 计数）</div>
+    <div class="harrow" style="color:#5b6f7a">─取消▶</div>
+    <div class="state end">cancelled</div>
+    <div class="wtag">succeeded 且带产物 → 下载（每次重新鉴权）</div>
+  </div>
+  <div class="note">Worker 进程终止时任务拒绝重投（task_reject_on_worker_lost），调度器回收卡死任务；结果与产物经任务详情接口轮询，前端抽屉展示进度与错误。</div>
+</div>
+
 </body></html>

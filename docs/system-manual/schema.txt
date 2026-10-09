@@ -1,0 +1,263 @@
+table_name|column_name|data_type|is_nullable|coalesce|coalesce
+v2_aqi_results|station_id|character varying|NO|36|
+v2_aqi_results|local_date|date|NO||
+v2_aqi_results|value|integer|YES||
+v2_aqi_results|components|json|NO||
+v2_aqi_results|complete|boolean|NO||
+v2_aqi_results|version|character varying|NO|32|
+v2_aqi_results|snapshot_hash|character varying|NO|64|
+v2_aqi_results|is_current|boolean|NO||
+v2_aqi_results|id|character varying|NO|36|
+v2_aqi_results|created_at|timestamp with time zone|NO||
+v2_attachments|inspection_id|character varying|YES|36|
+v2_attachments|enterprise_id|character varying|YES|36|
+v2_attachments|owner_id|character varying|NO|36|
+v2_attachments|original_name|character varying|NO|240|
+v2_attachments|mime|character varying|NO|100|
+v2_attachments|size|integer|NO||
+v2_attachments|sha256|character varying|NO|64|
+v2_attachments|storage_key|text|NO||
+v2_attachments|replaces_id|character varying|YES|36|
+v2_attachments|id|character varying|NO|36|
+v2_attachments|created_at|timestamp with time zone|NO||
+v2_audits|actor_id|character varying|YES|36|
+v2_audits|action|character varying|NO|80|
+v2_audits|object_type|character varying|NO|80|
+v2_audits|object_id|character varying|YES|64|
+v2_audits|detail|json|NO||
+v2_audits|request_id|character varying|YES|64|
+v2_audits|id|character varying|NO|36|
+v2_audits|created_at|timestamp with time zone|NO||
+v2_channels|name|character varying|NO|120|
+v2_channels|kind|character varying|NO|20|
+v2_channels|config|json|NO||
+v2_channels|credential_ref|character varying|YES|120|
+v2_channels|enabled|boolean|NO||
+v2_channels|id|character varying|NO|36|
+v2_channels|created_at|timestamp with time zone|NO||
+v2_cities|code|character varying|NO|30|
+v2_cities|name|character varying|NO|80|
+v2_cities|timezone|character varying|NO|40|
+v2_cities|id|character varying|NO|36|
+v2_cities|created_at|timestamp with time zone|NO||
+v2_deliveries|notification_id|character varying|NO|36|
+v2_deliveries|channel_id|character varying|NO|36|
+v2_deliveries|status|character varying|NO|24|
+v2_deliveries|attempts|integer|NO||
+v2_deliveries|error|text|YES||
+v2_deliveries|id|character varying|NO|36|
+v2_deliveries|created_at|timestamp with time zone|NO||
+v2_derived_values|station_id|character varying|NO|36|
+v2_derived_values|observed_at|timestamp with time zone|NO||
+v2_derived_values|pollutant|character varying|NO|16|
+v2_derived_values|kind|character varying|NO|20|
+v2_derived_values|value|double precision|NO||
+v2_derived_values|lower|double precision|YES||
+v2_derived_values|upper|double precision|YES||
+v2_derived_values|model_id|character varying|YES|36|
+v2_derived_values|job_id|character varying|NO|36|
+v2_derived_values|data_cutoff|timestamp with time zone|NO||
+v2_derived_values|snapshot_hash|character varying|NO|64|
+v2_derived_values|id|character varying|NO|36|
+v2_derived_values|created_at|timestamp with time zone|NO||
+v2_enterprise_records|enterprise_id|character varying|NO|36|
+v2_enterprise_records|kind|character varying|NO|20|
+v2_enterprise_records|name|character varying|NO|200|
+v2_enterprise_records|details|json|NO||
+v2_enterprise_records|id|character varying|NO|36|
+v2_enterprise_records|created_at|timestamp with time zone|NO||
+v2_enterprises|name|character varying|NO|200|
+v2_enterprises|credit_code|character varying|YES|18|
+v2_enterprises|industry|character varying|NO|100|
+v2_enterprises|address|text|NO||
+v2_enterprises|contact|character varying|NO|200|
+v2_enterprises|version|integer|NO||
+v2_enterprises|created_by|character varying|NO|36|
+v2_enterprises|id|character varying|NO|36|
+v2_enterprises|created_at|timestamp with time zone|NO||
+v2_evaluations|station_id|character varying|NO|36|
+v2_evaluations|local_date|date|NO||
+v2_evaluations|pollutant|character varying|NO|16|
+v2_evaluations|basis|character varying|NO|24|
+v2_evaluations|standard_id|character varying|NO|36|
+v2_evaluations|standard_snapshot|json|NO||
+v2_evaluations|snapshot_hash|character varying|NO|64|
+v2_evaluations|valid_points|integer|NO||
+v2_evaluations|value|double precision|YES||
+v2_evaluations|exceed_ratio|double precision|YES||
+v2_evaluations|status|character varying|NO|24|
+v2_evaluations|is_current|boolean|NO||
+v2_evaluations|job_id|character varying|YES|36|
+v2_evaluations|id|character varying|NO|36|
+v2_evaluations|created_at|timestamp with time zone|NO||
+v2_inspections|title|character varying|NO|200|
+v2_inspections|lead_id|character varying|YES|36|
+v2_inspections|enterprise_id|character varying|YES|36|
+v2_inspections|assignee_id|character varying|NO|36|
+v2_inspections|collaborators|json|NO||
+v2_inspections|created_by|character varying|NO|36|
+v2_inspections|status|character varying|NO|32|
+v2_inspections|due_date|date|YES||
+v2_inspections|facts|text|NO||
+v2_inspections|legal_references|json|NO||
+v2_inspections|version|integer|NO||
+v2_inspections|id|character varying|NO|36|
+v2_inspections|created_at|timestamp with time zone|NO||
+v2_jobs|kind|character varying|NO|40|
+v2_jobs|owner_id|character varying|YES|36|
+v2_jobs|parameters|json|NO||
+v2_jobs|status|character varying|NO|24|
+v2_jobs|progress|integer|NO||
+v2_jobs|result|json|NO||
+v2_jobs|error|text|YES||
+v2_jobs|attempts|integer|NO||
+v2_jobs|target_key|character varying|NO|160|
+v2_jobs|started_at|timestamp with time zone|YES||
+v2_jobs|finished_at|timestamp with time zone|YES||
+v2_jobs|heartbeat_at|timestamp with time zone|YES||
+v2_jobs|id|character varying|NO|36|
+v2_jobs|created_at|timestamp with time zone|NO||
+v2_jobs|progress_stage|character varying|YES|80|
+v2_jobs|progress_message|character varying|YES|240|
+v2_laws|title|character varying|NO|240|
+v2_laws|region|character varying|NO|80|
+v2_laws|effective_from|date|NO||
+v2_laws|effective_to|date|YES||
+v2_laws|source_url|text|NO||
+v2_laws|summary|text|NO||
+v2_laws|id|character varying|NO|36|
+v2_laws|created_at|timestamp with time zone|NO||
+v2_leads|title|character varying|NO|200|
+v2_leads|description|text|NO||
+v2_leads|station_id|character varying|YES|36|
+v2_leads|enterprise_id|character varying|YES|36|
+v2_leads|evaluation_id|character varying|YES|36|
+v2_leads|status|character varying|NO|24|
+v2_leads|priority|character varying|NO|20|
+v2_leads|created_by|character varying|YES|36|
+v2_leads|reason|text|YES||
+v2_leads|id|character varying|NO|36|
+v2_leads|created_at|timestamp with time zone|NO||
+v2_leads|claimed_by|character varying|YES|36|
+v2_model_activations|task|character varying|NO|24|
+v2_model_activations|model_id|character varying|NO|36|
+v2_model_activations|previous_id|character varying|YES|36|
+v2_model_activations|updated_at|timestamp with time zone|NO||
+v2_models|task|character varying|NO|24|
+v2_models|algorithm|character varying|NO|40|
+v2_models|status|character varying|NO|24|
+v2_models|storage_key|text|NO||
+v2_models|sha256|character varying|NO|64|
+v2_models|manifest|json|NO||
+v2_models|metrics|json|NO||
+v2_models|job_id|character varying|NO|36|
+v2_models|id|character varying|NO|36|
+v2_models|created_at|timestamp with time zone|NO||
+v2_notifications|user_id|character varying|NO|36|
+v2_notifications|title|character varying|NO|200|
+v2_notifications|body|text|NO||
+v2_notifications|href|character varying|NO|240|
+v2_notifications|dedupe_key|character varying|NO|200|
+v2_notifications|read_at|timestamp with time zone|YES||
+v2_notifications|id|character varying|NO|36|
+v2_notifications|created_at|timestamp with time zone|NO||
+v2_observations|source_file_id|character varying|NO|36|
+v2_observations|station_id|character varying|NO|36|
+v2_observations|observed_at|timestamp with time zone|NO||
+v2_observations|local_date|date|NO||
+v2_observations|pollutant|character varying|NO|16|
+v2_observations|basis|character varying|NO|24|
+v2_observations|value|double precision|YES||
+v2_observations|unit|character varying|NO|20|
+v2_observations|quality|character varying|NO|20|
+v2_observations|id|character varying|NO|36|
+v2_observations|created_at|timestamp with time zone|NO||
+v2_outbox|job_id|character varying|NO|36|
+v2_outbox|sent_at|timestamp with time zone|YES||
+v2_outbox|id|character varying|NO|36|
+v2_outbox|created_at|timestamp with time zone|NO||
+v2_rectifications|inspection_id|character varying|NO|36|
+v2_rectifications|requirement|text|NO||
+v2_rectifications|due_date|date|NO||
+v2_rectifications|response|text|NO||
+v2_rectifications|review_note|text|NO||
+v2_rectifications|status|character varying|NO|24|
+v2_rectifications|id|character varying|NO|36|
+v2_rectifications|created_at|timestamp with time zone|NO||
+v2_sessions|user_id|character varying|NO|36|
+v2_sessions|token_hash|character varying|NO|64|
+v2_sessions|csrf_hash|character varying|NO|64|
+v2_sessions|expires_at|timestamp with time zone|NO||
+v2_sessions|revoked|boolean|NO||
+v2_sessions|id|character varying|NO|36|
+v2_sessions|created_at|timestamp with time zone|NO||
+v2_source_attempts|local_date|date|NO||
+v2_source_attempts|kind|character varying|NO|20|
+v2_source_attempts|status|character varying|NO|20|
+v2_source_attempts|message|text|YES||
+v2_source_attempts|job_id|character varying|YES|36|
+v2_source_attempts|id|character varying|NO|36|
+v2_source_attempts|created_at|timestamp with time zone|NO||
+v2_source_files|source_key|character varying|NO|200|
+v2_source_files|local_date|date|NO||
+v2_source_files|kind|character varying|NO|20|
+v2_source_files|origin|character varying|NO|20|
+v2_source_files|url|text|YES||
+v2_source_files|sha256|character varying|NO|64|
+v2_source_files|storage_key|text|NO||
+v2_source_files|is_current|boolean|NO||
+v2_source_files|row_count|integer|NO||
+v2_source_files|invalid_count|integer|NO||
+v2_source_files|attribution|text|NO||
+v2_source_files|id|character varying|NO|36|
+v2_source_files|created_at|timestamp with time zone|NO||
+v2_standards|code|character varying|NO|80|
+v2_standards|pollutant|character varying|NO|16|
+v2_standards|basis|character varying|NO|24|
+v2_standards|grade|character varying|NO|16|
+v2_standards|region|character varying|NO|80|
+v2_standards|limit_value|double precision|NO||
+v2_standards|unit|character varying|NO|20|
+v2_standards|min_points|integer|NO||
+v2_standards|effective_from|date|NO||
+v2_standards|effective_to|date|YES||
+v2_standards|source_url|text|NO||
+v2_standards|article|text|NO||
+v2_standards|enabled|boolean|NO||
+v2_standards|version|integer|NO||
+v2_standards|id|character varying|NO|36|
+v2_standards|created_at|timestamp with time zone|NO||
+v2_station_aliases|station_id|character varying|NO|36|
+v2_station_aliases|provider|character varying|NO|50|
+v2_station_aliases|external_name|character varying|NO|100|
+v2_station_aliases|valid_from|date|NO||
+v2_station_aliases|valid_to|date|YES||
+v2_station_aliases|id|character varying|NO|36|
+v2_station_aliases|created_at|timestamp with time zone|NO||
+v2_stations|city_id|character varying|NO|36|
+v2_stations|code|character varying|NO|100|
+v2_stations|name|character varying|NO|100|
+v2_stations|latitude|double precision|YES||
+v2_stations|longitude|double precision|YES||
+v2_stations|active|boolean|NO||
+v2_stations|id|character varying|NO|36|
+v2_stations|created_at|timestamp with time zone|NO||
+v2_users|username|character varying|NO|80|
+v2_users|display_name|character varying|NO|80|
+v2_users|password_hash|text|NO||
+v2_users|role|character varying|NO|32|
+v2_users|active|boolean|NO||
+v2_users|must_change_password|boolean|NO||
+v2_users|failed_logins|integer|NO||
+v2_users|locked_until|timestamp with time zone|YES||
+v2_users|id|character varying|NO|36|
+v2_users|created_at|timestamp with time zone|NO||
+v2_workflow_events|inspection_id|character varying|NO|36|
+v2_workflow_events|actor_id|character varying|NO|36|
+v2_workflow_events|action|character varying|NO|40|
+v2_workflow_events|from_status|character varying|NO|32|
+v2_workflow_events|to_status|character varying|NO|32|
+v2_workflow_events|note|text|NO||
+v2_workflow_events|id|character varying|NO|36|
+v2_workflow_events|created_at|timestamp with time zone|NO||
+(261 rows)
