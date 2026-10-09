@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><style>
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #eef2f4; padding: 30px; }
+  .figure { background: #fff; border: 1px solid #dce5e9; border-radius: 10px; padding: 26px 30px 22px; margin-bottom: 30px; width: max-content; }
+  .fig-title { font-size: 15px; font-weight: 700; color: #20343f; margin-bottom: 18px; }
+  .fig-title span { color: #087f8c; margin-right: 8px; }
+  .layer { display: flex; gap: 12px; align-items: stretch; margin-bottom: 14px; }
+  .layer-label { width: 74px; flex: none; display: flex; align-items: center; justify-content: center; writing-mode: horizontal-tb; font-size: 12px; color: #fff; background: #102b37; border-radius: 6px; padding: 8px 4px; font-weight: 600; }
+  .layer-boxes { display: flex; gap: 10px; flex: 1; flex-wrap: wrap; align-items: center; }
+  .box { border: 1px solid #cfe0e4; background: #f7fafb; border-radius: 8px; padding: 9px 14px; font-size: 13px; color: #20343f; text-align: center; min-width: 108px; }
+  .box small { display: block; color: #71838e; font-size: 11px; margin-top: 3px; }
+  .box.brand { background: #087f8c; border-color: #087f8c; color: #fff; }
+  .box.brand small { color: #cfe9e6; }
+  .box.dark { background: #102b37; border-color: #102b37; color: #e6f1f5; }
+  .box.dark small { color: #8fb0bc; }
+  .box.warn { background: #fdf6ec; border-color: #bd861b; }
+  .box.sink { background: #fff; border-style: dashed; }
+  .arrow { text-align: center; color: #087f8c; font-size: 15px; line-height: 1; margin: 2px 0; }
+  .vsep { height: 14px; }
+  .harrow { color: #087f8c; font-size: 16px; align-self: center; }
+  .flow { display: flex; align-items: center; gap: 8px; }
+  .note { font-size: 11.5px; color: #71838e; margin-top: 12px; border-top: 1px dashed #dce5e9; padding-top: 8px; }
+  /* workflow */
+  .state { border: 1.5px solid #087f8c; color: #0b5560; border-radius: 18px; padding: 8px 16px; font-size: 13px; background: #f0f8f9; white-space: nowrap; }
+  .state.start { background: #087f8c; color: #fff; }
+  .state.end { background: #102b37; color: #e6f1f5; border-color: #102b37; }
+  .state.back { border-color: #c75849; color: #c75849; background: #fdf3f2; border-style: dashed; }
+  .wrow { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .wtag { font-size: 10.5px; color: #8a9ba4; white-space: nowrap; }
+  /* license decision */
+  .decision { border: 1.5px solid #bd861b; background: #fdf6ec; color: #7a5a12; border-radius: 8px; padding: 9px 16px; font-size: 13px; text-align: center; }
+  .ok { color: #388469; font-weight: 700; } .no { color: #c75849; font-weight: 700; }
+  .grid2 { display: flex; gap: 40px; }
+  .col { flex: 1; }
+  .colhead { font-size: 12px; color: #71838e; margin-bottom: 10px; border-left: 3px solid #087f8c; padding-left: 8px; }
+</style></head><body>
+
+<!-- 图1 分层架构 -->
+<div class="figure" id="fig-architecture" style="width:1080px">
+  <div class="fig-title"><span>图</span>总体分层架构</div>
+  <div class="layer"><div class="layer-label">用户层</div><div class="layer-boxes">
+    <div class="box">监管主管<small>态势总览 / 分派审核</small></div><div class="box">执法人员<small>任务执行 / 现场录入</small></div>
+    <div class="box">研究者<small>数据分析 / 导出</small></div><div class="box">管理员<small>用户 / 标准 / 数据源</small></div>
+    <div class="box sink">领导驾驶舱<small>/screen · 只读 · 1920×1080</small></div></div></div>
+  <div class="arrow">▼ HTTPS · Cookie 会话 · CSRF 令牌 · 水印</div>
+  <div class="layer"><div class="layer-label">接入层</div><div class="layer-boxes">
+    <div class="box brand">Nginx<small>静态资源 + /api/v2 反向代理 · CSP 安全头</small></div>
+    <div class="box">React 工作台<small>Ant Design 5 · ECharts 6 · 浅色主题</small></div></div></div>
+  <div class="arrow">▼ REST JSON · 分页契约 · 统一错误码</div>
+  <div class="layer"><div class="layer-label">应用层</div><div class="layer-boxes">
+    <div class="box brand">FastAPI 服务<small>模块化单体 · 事务读写</small></div>
+    <div class="box dark">Celery Worker<small>采集 / 导入 / 评价 / 导出</small></div>
+    <div class="box dark">Model Worker<small>训练 / 预测 / 插补</small></div>
+    <div class="box dark">Scheduler<small>每日采集 · 通知 · 定时任务</small></div></div></div>
+  <div class="arrow">▼ 事务发件箱 · 任务锁 · 心跳恢复</div>
+  <div class="layer"><div class="layer-label">数据层</div><div class="layer-boxes">
+    <div class="box">PostgreSQL<small>观测 / 评价 / 执法 / 审计 全量事务数据</small></div>
+    <div class="box">Redis<small>任务队列 · 缓存</small></div>
+    <div class="box">文件存储<small>内容寻址 · SHA-256 核验 · 私有卷</small></div></div></div>
+  <div class="arrow">▼ 数据源适配器 + 许可门禁</div>
+  <div class="layer"><div class="layer-label">外部源</div><div class="layer-boxes">
+    <div class="box warn">Quotsoft<small>试运行数据源 · 每日文件</small></div>
+    <div class="box sink">官方监测接口<small>正式环境接入 · 适配器已注册</small></div></div></div>
+  <div class="note">模块化单体 + 异步任务：同步请求只负责事务读写；耗时操作统一进入任务队列，进度经发件箱回写。</div>
+</div>
+
+<!-- 图2 部署拓扑 -->
+<div class="figure" id="fig-deployment" style="width:1080px">
+  <div class="fig-title"><span>图</span>容器部署拓扑（Docker Compose）</div>
+  <div class="flow" style="margin-bottom:14px">
+    <div class="box sink" style="min-width:130px">浏览器 / 大屏终端<small>HTTPS 443 · 同源</small></div>
+    <div class="harrow">──▶</div>
+    <div class="box brand" style="min-width:150px">web<small>Nginx · React 静态包 · 反代 /api</small></div>
+    <div class="harrow">──▶</div>
+    <div class="box brand" style="min-width:150px">api<small>FastAPI · uvicorn · 会话/CSRF</small></div>
+  </div>
+  <div class="grid2">
+    <div class="col">
+      <div class="colhead">应用容器（同一平台镜像）</div>
+      <div class="layer-boxes" style="flex-direction:column;align-items:stretch;gap:8px">
+        <div class="box dark">worker<small>采集 collect · 导入 import · 评价 evaluate · 导出 export</small></div>
+        <div class="box dark">model-worker<small>train · forecast · impute（GPU 可选）</small></div>
+        <div class="box dark">scheduler<small>每日 03:30 采集 · 滚动重查最近七天 · 通知</small></div>
+        <div class="box">migrate<small>启动前置：Alembic 版本迁移</small></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="colhead">基础设施</div>
+      <div class="layer-boxes" style="flex-direction:column;align-items:stretch;gap:8px">
+        <div class="box">postgres<small>PostgreSQL 16 · 全量业务数据 + 审计</small></div>
+        <div class="box">redis<small>Redis 7 · Celery broker · 幂等键</small></div>
+        <div class="box">存储卷 platform-data<small>raw / uploads / exports / models / backups</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="note">政务云部署映射：web→负载均衡/网关，api 与 worker 按实例扩容，PostgreSQL/Redis 换用云托管服务，存储卷映射对象存储或文件存储。</div>
+</div>
+
+<!-- 图3 数据链路 -->
+<div class="figure" id="fig-dataflow" style="width:1100px">
+  <div class="fig-title"><span>图</span>监测数据链路与溯源</div>
+  <div class="flow">
+    <div class="box warn">数据源<small>Quotsoft 日文件<br>官方接口（规划）</small></div>
+    <div class="harrow">──▶</div>
+    <div class="decision">许可门禁<br><small>授权确认 · 有效期 · 数据源匹配</small></div>
+    <div class="harrow">──▶</div>
+    <div class="box">采集适配器<small>下载 · 校验 · 修订识别</small></div>
+    <div class="harrow">──▶</div>
+    <div class="box">SourceFile<small>原文件 SHA-256<br>不可变修订 · is_current</small></div>
+    <div class="harrow">──▶</div>
+    <div class="box">Observation<small>小时值/滚动均值<br>绑定来源文件</small></div>
+    <div class="harrow">──▶</div>
+    <div class="box">评价引擎<small>标准快照 · 完整性<br>AQI 六项计算</small></div>
+    <div class="harrow">──▶</div>
+    <div class="box brand">API → 前端<small>来源 / 新鲜度 / 可信度标识</small></div>
+  </div>
+  <div class="vsep"></div>
+  <div class="flow" style="margin-left:150px">
+    <div class="box sink" style="border-color:#7b5cc4;color:#5b3fa3">DerivedValue<small>插补辅助值 · 不覆盖原始</small></div>
+    <div class="harrow" style="color:#7b5cc4">──▶</div>
+    <div class="box sink" style="border-color:#7b5cc4;color:#5b3fa3">模型制品<small>输入矩阵 · 代码哈希 · 指标权重</small></div>
+  </div>
+  <div class="note">原始观测永远指向来源文件哈希；修订产生新版本而非覆盖；插补/预测数据走独立存储并在界面标注，与实测证据分离。</div>
+</div>
+
+<!-- 图4 执法状态机 -->
+<div class="figure" id="fig-workflow" style="width:1080px">
+  <div class="fig-title"><span>图</span>核查任务状态机</div>
+  <div class="wrow">
+    <div class="state start">线索生成 / 认领</div><div class="harrow">─分派▶</div>
+    <div class="state">待核查 assigned</div><div class="harrow">─开始▶</div>
+    <div class="state">现场核查 inspection</div>
+    <div class="wtag">录入事实 · 关联法规 · 上传证据</div>
+  </div>
+  <div class="wrow" style="margin-left:300px">
+    <div class="wtag" style="width:90px;text-align:right">有违法事实</div>
+    <div class="harrow">─责令整改▶</div>
+    <div class="state">整改跟踪 rectification</div><div class="harrow">─提交整改▶</div>
+    <div class="state">复查 reinspection</div><div class="harrow">─提交审核▶</div>
+    <div class="state">主管审核 review</div><div class="harrow">─通过▶</div>
+    <div class="state end">已归档 archived</div>
+  </div>
+  <div class="wrow" style="margin-left:300px">
+    <div class="wtag" style="width:90px;text-align:right">无违法事实</div>
+    <div class="harrow" style="color:#5b6f7a">─直接提审▶</div>
+    <div class="wtag" style="width:88px">（直达审核）</div>
+    <div class="harrow" style="color:#c75849">◀─退回─</div>
+    <div class="state back">退回 → 现场核查</div>
+    <div class="harrow" style="color:#c75849">◀─重新开启─</div>
+    <div class="wtag">归档后可重开</div>
+  </div>
+  <div class="note">所有流转均留痕（WorkflowEvent + 审计表）；编辑与流转携带版本号，冲突返回 409；整改须复查结论后方可提审；归档需主管权限。</div>
+</div>
+
+<!-- 图5 许可门禁 -->
+<div class="figure" id="fig-license" style="width:980px">
+  <div class="fig-title"><span>图</span>数据源许可门禁判定</div>
+  <div class="flow">
+    <div class="box dark">采集任务触发<small>调度 / 手工 / CLI</small></div>
+    <div class="harrow">──▶</div>
+    <div class="box">解析数据源<small>ESP_SOURCE_PROVIDER<br>注册表显式选择</small></div>
+    <div class="harrow">──▶</div>
+    <div class="decision">授权确认文件校验<br><small>provider 匹配 · 签署人 · 证据哈希 · 有效期</small></div>
+  </div>
+  <div class="vsep"></div>
+  <div class="grid2">
+    <div class="col">
+      <div class="colhead">判定结果</div>
+      <div class="layer-boxes" style="flex-direction:column;align-items:stretch;gap:8px">
+        <div class="box"><span class="ok">ok</span> — 确认有效且在有效期内<small>放行采集</small></div>
+        <div class="box"><span class="no">blocked</span> — 已过期 / 记录无效 / 数据源不匹配<small>所有环境拒绝，任务记录错误原因</small></div>
+        <div class="box"><span class="no">unconfigured</span> — 未配置授权<small>生产环境拒绝；非生产允许（联调用）</small></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="colhead">授权文件要点（JSON · 可审计）</div>
+      <div class="box" style="text-align:left;font-size:12px;line-height:1.9">
+        provider：Quotsoft / 官方接口<br>
+        scope：trial_operation（须 valid_until）或 continuous_business_use<br>
+        confirmed_by / confirmed_at / reference：签署留痕<br>
+        evidence_sha256：授权佐证文件哈希<br>
+        valid_until：试运行授权截止（到期全环境阻断）
+      </div>
+    </div>
+  </div>
+  <div class="note">ESP_SOURCE_LICENSE_CONFIRMED 为部署总开关；门禁在适配器 collect() 内执行，调度、手工任务、CLI 三条入口同一规则。</div>
+</div>
+
+</body></html>
